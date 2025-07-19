@@ -1,7 +1,6 @@
-from flask import Blueprint, jsonify, request, current_app
-import requests
+from flask import Blueprint, request,render_template,redirect, url_for, flash, session
+from services import UsuarioService as _service
 
-FIREBASE_API_KEY = "AIzaSyAec6kanhA1T-GYkpwgxP7xIOKemRatXYI"  
 usuario_blueprint = Blueprint("usuario", __name__)
 
 @usuario_blueprint.route("/cadastrar", methods=["POST"])
@@ -11,50 +10,36 @@ def cadastrar_usuario():
     senha = data.get("senha")
 
     if not email or not senha:
-        return jsonify({"erro": "Email e senha são obrigatórios"}), 400
+        return {"erro": "Email e senha são obrigatórios."}, 400
 
-    try:
-        auth = current_app.config["FIREBASE_AUTH"]
-        user = auth.create_user(email=email, password=senha)
-        return jsonify({
-            "mensagem": "Usuário criado com sucesso!",
-            "uid": user.uid,
-            "email": user.email
-        }), 201
-
-    except Exception as e:
-        return jsonify({"erro": str(e)}), 400
-
+    return _service.cadastrar_usuario(email, senha)
 
 @usuario_blueprint.route("/login", methods=["POST"])
 def login_usuario():
-    data = request.get_json()
-    email = data.get("email")
-    senha = data.get("senha")
+    email = request.form.get("email") or request.form.get("username")
+    senha = request.form.get("senha") or request.form.get("password")
 
     if not email or not senha:
-        return jsonify({"erro": "Email e senha são obrigatórios"}), 400
+        flash("Email e senha são obrigatórios.", "error")
+        return redirect(url_for("usuario.tela_login"))  
 
-    url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
+    try:
+        dados = _service.login(email, senha)
+        session['idToken'] = dados['idToken']
+        session['refreshToken'] = dados['refreshToken']
+        session['uid'] = dados['localId']
+        session['email'] = dados['email']
 
-    payload = {
-        "email": email,
-        "password": senha,
-        "returnSecureToken": True
-    }
+        return redirect(url_for("usuario.tela_home"))  
+    except ValueError as e:
+        flash("Email ou Senha incorretos", "error")
+        return redirect(url_for("usuario.tela_login"))  
 
-    response = requests.post(url, json=payload)
 
-    if response.status_code == 200:
-        resp_data = response.json()
-        return jsonify({
-            "mensagem": "Login realizado com sucesso!",
-            "idToken": resp_data["idToken"],
-            "refreshToken": resp_data["refreshToken"],
-            "uid": resp_data["localId"],
-            "email": resp_data["email"]
-        })
-    else:
-        erro = response.json()
-        return jsonify({"erro": erro.get("error", {}).get("message", "Erro desconhecido")}), 401
+@usuario_blueprint.route("/index", methods=["GET"])
+def tela_login():
+    return render_template("index.html")
 
+@usuario_blueprint.route("/home", methods=["GET"])
+def tela_home():
+    return render_template("home.html")
