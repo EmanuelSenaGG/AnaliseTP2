@@ -12,6 +12,7 @@ def create_app():
     db = firestore.client()
     app = Flask(__name__)
     app.secret_key = "19042002" 
+    app.config["ApiDeepSeekKey"] = "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"
     app.config["FIREBASE_DB"] = db
     app.config["FIREBASE_AUTH"] = auth
     app.json.dumps = lambda obj, **kwargs: json.dumps(obj, ensure_ascii=False, **kwargs)

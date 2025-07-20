@@ -1,136 +1,410 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Proposta de Preço - Licitação</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f7f8;
-            margin: 0;
-            padding: 20px;
-        }
+  <meta charset="UTF-8" />
+  <title>Formulário Proposta de Licitação</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f7f9fc;
+      margin: 40px auto;
+      max-width: 700px;
+      color: #222;
+    }
 
-        header {
-            background-color: #2980b9;
-            color: white;
-            padding: 20px 30px;
-            text-align: center;
-            border-radius: 6px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
 
-        header h1 {
-            margin: 0;
-            font-weight: 700;
-        }
+    form {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    }
 
-        main {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px 40px;
-            border-radius: 8px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        }
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: #444;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-        }
+    input[type=text],
+    input[type=number],
+    input[type=date],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 6px;
+      border: 1.8px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+      resize: vertical;
+    }
 
-        label {
-            font-weight: 600;
-            margin-top: 15px;
-            margin-bottom: 6px;
-            color: #333;
-        }
+    input[type=text]:focus,
+    input[type=number]:focus,
+    input[type=date]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 6px rgba(74, 144, 226, 0.5);
+    }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        textarea,
-        select {
-            padding: 10px 14px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-            font-family: inherit;
-        }
+    textarea {
+      min-height: 80px;
+    }
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        input[type="date"]:focus,
-        textarea:focus,
-        select:focus {
-            border-color: #2980b9;
-            outline: none;
-        }
+    button,
+    #addItemButton {
+      margin-top: 25px;
+      padding: 12px 18px;
+      background: #4a90e2;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+    button:hover,
+    #addItemButton:hover {
+      background: #357abd;
+    }
 
-        button {
-            margin-top: 25px;
-            padding: 14px;
-            background-color: #2980b9;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 28px;
+      font-size: 14px;
+    }
 
-        button:hover {
-            background-color: #1c5d87;
-        }
+    table th,
+    table td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      text-align: center;
+    }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            main {
-                padding: 20px;
-            }
-        }
-    </style>
+    table th {
+      background: #fbd4b4;
+      font-weight: 700;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .total-row td {
+      font-weight: 700;
+    }
+
+    .remove-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Gerador de Proposta de Preço - Licitação</h1>
-    </header>
 
-    <main>
-        <form id="propostaForm" method="post" action="/api/proposta">
-            <label for="numero_licitacao">Número da Licitação</label>
-            <input type="text" id="numero_licitacao" name="numero_licitacao" placeholder="Ex: 12345/2025" required />
+  <h1>Formulário de Proposta de Licitação</h1>
 
-            <label for="descricao">Descrição da Proposta</label>
-            <textarea id="descricao" name="descricao" placeholder="Descreva a proposta detalhadamente" required></textarea>
+  <form id="propostaForm" method="post">
+    <label for="numero_licitacao">Número da Licitação</label>
+    <input type="text" id="numero_licitacao" name="numero_licitacao" placeholder="Ex: 12345/2025" required />
 
-            <label for="valor">Valor Proposto (R$)</label>
-            <input type="number" id="valor" name="valor" placeholder="Ex: 15000.00" min="0" step="0.01" required />
+    <label for="orgao">Órgão</label>
+    <input type="text" id="orgao" name="orgao" placeholder="Nome do órgão" required />
 
-            <label for="data_validade">Data de Validade da Proposta</label>
-            <input type="date" id="data_validade" name="data_validade" required />
+    <label for="objeto_licitacao">Objeto da Licitação</label>
+    <textarea id="objeto_licitacao" name="objeto_licitacao" placeholder="Descreva o objeto da licitação"
+      required></textarea>
 
-            <label for="modalidade">Modalidade da Licitação</label>
-            <select id="modalidade" name="modalidade" required>
-                <option value="" disabled selected>Selecione a modalidade</option>
-                <option value="concorrencia">Concorrência</option>
-                <option value="tomada_de_preco">Tomada de Preço</option>
-                <option value="convite">Convite</option>
-                <option value="pregao_presencial">Pregão Presencial</option>
-                <option value="pregao_eletronico">Pregão Eletrônico</option>
-            </select>
+    <label for="razao_social">Razão Social</label>
+    <input type="text" id="razao_social" name="razao_social" required />
 
-            <button type="submit">Enviar Proposta</button>
-        </form>
-    </main>
+    <label for="cnpj">CNPJ</label>
+    <input type="text" id="cnpj" name="cnpj" required />
+
+    <label for="inscricao_estadual">Inscrição Estadual</label>
+    <input type="text" id="inscricao_estadual" name="inscricao_estadual" />
+
+    <label for="endereco">Endereço</label>
+    <input type="text" id="endereco" name="endereco" />
+
+    <label for="cidade">Cidade</label>
+    <input type="text" id="cidade" name="cidade" />
+
+    <label for="telefone">Telefone</label>
+    <input type="text" id="telefone" name="telefone" />
+
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" />
+
+    <label for="agencia">Agência</label>
+    <input type="text" id="agencia" name="agencia" />
+
+    <label for="conta_corrente">Conta Corrente</label>
+    <input type="text" id="conta_corrente" name="conta_corrente" />
+
+    <label for="banco">Banco</label>
+    <input type="text" id="banco" name="banco" />
+
+    <h3>Dados do Preposto</h3>
+
+    <label for="nome_preposto">Nome</label>
+    <input type="text" id="nome_preposto" name="nome_preposto" />
+
+    <label for="rg_preposto">RG</label>
+    <input type="text" id="rg_preposto" name="rg_preposto" />
+
+    <label for="cpf_preposto">CPF</label>
+    <input type="text" id="cpf_preposto" name="cpf_preposto" />
+
+    <label for="cargo_preposto">Cargo/Função</label>
+    <input type="text" id="cargo_preposto" name="cargo_preposto" />
+
+    <label for="estado_civil_preposto">Estado Civil</label>
+    <input type="text" id="estado_civil_preposto" name="estado_civil_preposto" />
+
+    <label for="telefone_preposto">Telefone/WhatsApp</label>
+    <input type="text" id="telefone_preposto" name="telefone_preposto" />
+
+    <label for="email_preposto">Email</label>
+    <input type="text" id="email_preposto" name="email_preposto" />
+
+    <h3>Proposta Comercial - Itens</h3>
+
+    <label for="descricao_item">Descrição do Item</label>
+    <input type="text" id="descricao_item" placeholder="Descrição" />
+
+    <label for="unidade_item">Unidade</label>
+    <input type="text" id="unidade_item" placeholder="Ex: UN" />
+
+    <label for="quantidade_item">Quantidade</label>
+    <input type="number" id="quantidade_item" min="1" value="1" />
+
+    <label for="valor_unitario_item">Valor Unitário (R$)</label>
+    <input type="number" id="valor_unitario_item" min="0" step="0.01" value="0.00" />
+
+    <button type="button" id="addItemButton">Adicionar Item</button>
+
+    <table id="itensTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Descrição</th>
+          <th>Unidade</th>
+          <th>Quantidade</th>
+          <th>Valor Unit.</th>
+          <th>Valor Total</th>
+          <th>Remover</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Itens adicionados aparecem aqui -->
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="5" class="right">TOTAL</td>
+          <td class="right" id="valorTotal">R$ 0,00</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <button type="submit">Gerar Proposta</button>
+  </form>
+
+  <script>
+    const addItemButton = document.getElementById("addItemButton");
+    const itensTableBody = document.querySelector("#itensTable tbody");
+    const valorTotalElement = document.getElementById("valorTotal");
+
+    function formatReal(valor) {
+      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function atualizarTotalEIndices() {
+      let total = 0;
+      const linhas = itensTableBody.querySelectorAll("tr");
+      linhas.forEach((linha, index) => {
+        // Atualiza número sequencial do item (começa em 1)
+        linha.querySelector("td:first-child").textContent = index + 1;
+
+        // Soma valor total do item
+        const valorTd = linha.querySelector(".valor-total");
+        if (valorTd) {
+          const valorStr = valorTd.textContent.replace(/[R$\s.]/g, '').replace(',', '.');
+          total += parseFloat(valorStr) || 0;
+        }
+      });
+      valorTotalElement.textContent = formatReal(total);
+    }
+
+    addItemButton.addEventListener("click", () => {
+      const descricao = document.getElementById("descricao_item").value.trim();
+      const unidade = document.getElementById("unidade_item").value.trim();
+      const quantidade = parseFloat(document.getElementById("quantidade_item").value);
+      const valorUnitario = parseFloat(document.getElementById("valor_unitario_item").value);
+
+      if (!descricao) {
+        alert("Por favor, preencha a descrição do item.");
+        return;
+      }
+      if (!unidade) {
+        alert("Por favor, preencha a unidade do item.");
+        return;
+      }
+      if (!quantidade || quantidade <= 0) {
+        alert("Por favor, informe uma quantidade válida.");
+        return;
+      }
+      if (isNaN(valorUnitario) || valorUnitario < 0) {
+        alert("Por favor, informe um valor unitário válido.");
+        return;
+      }
+
+      const valorTotalItem = quantidade * valorUnitario;
+
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+    <td class="center">0</td>
+    <td>${descricao}</td>
+    <td class="center">${unidade}</td>
+    <td class="center">${quantidade}</td>
+    <td class="right">${formatReal(valorUnitario)}</td>
+    <td class="right valor-total">${formatReal(valorTotalItem)}</td>
+    <td class="center"><button type="button" class="remove-btn">Remover</button></td>
+  `;
+
+      itensTableBody.appendChild(newRow);
+
+      // Evento para remover o item
+      newRow.querySelector(".remove-btn").addEventListener("click", () => {
+        newRow.remove();
+        atualizarTotalEIndices();
+      });
+
+      // Atualiza total e números dos itens
+      atualizarTotalEIndices();
+
+      // Limpa inputs
+      document.getElementById("descricao_item").value = "";
+      document.getElementById("unidade_item").value = "";
+      document.getElementById("quantidade_item").value = 1;
+      document.getElementById("valor_unitario_item").value = "0.00";
+    });
+
+    function mostrarLoading() {
+      Swal.fire({
+        title: 'Gerando PDF...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+    }
+
+    function gerarPdf(jsonData) {
+      fetch("http://127.0.0.1:5000/api/proposta/gerar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
+      })
+        .then(response => response.text())
+        .then(html => {
+          // Cria container temporário para html2pdf capturar estilos e conteúdo
+          const container = document.createElement('div');
+          container.style.position = 'fixed';
+          container.style.left = '-9999px';  // fora da tela, mas renderizável
+          container.innerHTML = html;
+          document.body.appendChild(container);
+
+          return html2pdf().from(container).set({
+            margin: 10,
+            filename: 'proposta.pdf',
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          }).save()
+            .finally(() => {
+              document.body.removeChild(container);
+              Swal.close();
+            });
+        })
+        .catch(error => {
+          console.error("Erro ao gerar PDF:", error);
+          Swal.close();
+          Swal.fire('Erro', 'Falha ao gerar PDF', 'error');
+        });
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <script>
+    document.getElementById("propostaForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Evita envio tradicional do form
+
+      const form = event.target;
+      const formData = new FormData(form);
+      const jsonData = {};
+
+      // Pega todos os campos do formulário automaticamente
+      for (let [key, value] of formData.entries()) {
+        jsonData[key] = value.trim();
+      }
+
+      // Pega os itens da tabela
+      const itens = [];
+      const linhas = document.querySelectorAll("#itensTable tbody tr");
+      linhas.forEach((linha) => {
+        const colunas = linha.querySelectorAll("td");
+        if (colunas.length >= 6) {
+          itens.push({
+            descricao: colunas[1].textContent.trim(),
+            unidade: colunas[2].textContent.trim(),
+            quantidade: parseFloat(colunas[3].textContent.trim()),
+            valor_unitario: parseFloat(colunas[4].textContent.replace(/[^\d,]/g, "").replace(",", ".")),
+            valor_total: parseFloat(colunas[5].textContent.replace(/[^\d,]/g, "").replace(",", ".")),
+          });
+        }
+      });
+
+      const totalPreco = document.getElementById("valorTotal").textContent.replace(/[R$\s.]/g, '').replace(',', '.');
+      jsonData["itens"] = itens;
+      jsonData["total_preco_itens"] = parseFloat(totalPreco);
+      mostrarLoading();
+      gerarPdf(jsonData).catch(error => {
+        console.error("Erro ao gerar PDF:", error);
+        Swal.close();
+        Swal.fire('Erro', 'Falha ao gerar PDF', 'error');
+      });
+
+    });
+  </script>
 </body>
+
 </html>
