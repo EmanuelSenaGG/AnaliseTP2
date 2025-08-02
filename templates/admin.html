@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento de Licitações</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .tab-link {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: 0;
+            margin-bottom: -1px;
+            background-color: #e9ecef;
+        }
+
+        .tab-link.active {
+            border-color: #ccc;
+            border-bottom: 2px solid #fff;
+            background-color: #fff;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: 0;
+            background-color: #fff;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h2,
+        h3 {
+            color: #0056b3;
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 0;
+            /* Ajustado */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            /* Aumentado */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button,
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover,
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-secondary {
+            background-color: #6c757d;
+        }
+
+        .button-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            /* Aumentado */
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            border-bottom: none;
+            margin: 0;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Sistema de Gerenciamento</h1>
+
+    <div class="tabs">
+        <div class="tab-link active" onclick="openTab(event, 'usuarios')">Gestão de Usuários</div>
+        <div class="tab-link" onclick="openTab(event, 'licitacoes')">Gestão de Licitações</div>
+    </div>
+
+    <div id="usuarios" class="tab-content active">
+        <div class="section-header">
+            <h3>Usuários Cadastrados</h3>
+            <button onclick="openModal('cadastroUsuarioModal')">Cadastrar Novo Usuário</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>usuario1@example.com</td>
+                </tr>
+                <tr>
+                    <td>usuario2@example.com</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="licitacoes" class="tab-content">
+        <div class="section-header">
+            <h3>Licitações Cadastradas</h3>
+            <button onclick="openModal('cadastroLicitacaoModal')">Cadastrar Nova Licitação</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Número da Licitação</th>
+                    <th>Objeto</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024/001</td>
+                    <td>Aquisição de equipamentos de informática</td>
+                    <td><button onclick="openModal('vincularUsuarioModal')">Vincular Usuários</button></td>
+                </tr>
+                <tr>
+                    <td>2024/002</td>
+                    <td>Contratação de serviços de limpeza</td>
+                    <td><button onclick="openModal('vincularUsuarioModal')">Vincular Usuários</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="cadastroUsuarioModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cadastrar Novo Usuário</h3>
+                <span class="close" onclick="closeModal('cadastroUsuarioModal')">&times;</span>
+            </div>
+            <form id="formCadastroUsuario">
+                <label for="email">Email do Usuário:</label>
+                <input type="email" id="email" placeholder="nome@exemplo.com" required>
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" placeholder="Digite a senha" required>
+                <button type="submit">Cadastrar Usuário</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cadastroLicitacaoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cadastrar Nova Licitação</h3>
+                <span class="close" onclick="closeModal('cadastroLicitacaoModal')">&times;</span>
+            </div>
+            <form>
+                <label for="num_licitacao">Número da Licitação:</label>
+                <input type="text" id="num_licitacao" placeholder="Ex: 2025/001" required>
+                <label for="obj_licitacao">Objeto da Licitação:</label>
+                <input type="text" id="obj_licitacao" placeholder="Descrição do objeto" required>
+                <label for="arquivo">Anexar Edital:</label>
+                <input type="file" id="arquivo" name="arquivo">
+                <button type="submit">Cadastrar Licitação</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="vincularUsuarioModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Vincular Usuários à Licitação 2024/001</h3>
+                <span class="close" onclick="closeModal('vincularUsuarioModal')">&times;</span>
+            </div>
+            <form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Selecionar</th>
+                            <th>Email do Usuário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" id="user1" name="usuario" value="usuario1@example.com"></td>
+                            <td><label for="user1">usuario1@example.com</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="user2" name="usuario" value="usuario2@example.com"></td>
+                            <td><label for="user2">usuario2@example.com</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="user3" name="usuario" value="novo.usuario@example.com"></td>
+                            <td><label for="user3">novo.usuario@example.com</label></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <button type="submit">Salvar Vínculos</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Funções para controlar as modais
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Fecha a modal se o usuário clicar fora dela
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+
+        // --- LÓGICA PARA CADASTRO DE USUÁRIO ---
+        document.getElementById('formCadastroUsuario').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const email = form.email.value;
+            const senha = form.senha.value;
+
+            const data = {
+                email: email,
+                senha: senha
+            };
+
+            // Exibe o alerta de carregamento
+            Swal.fire({
+                title: 'Cadastrando...',
+                text: 'Por favor, aguarde.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch('http://127.0.0.1:5000/api/usuario/cadastrar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw errorData;
+                        });
+                    }
+                    // Se a resposta for 'ok', passamos o resultado para o próximo .then()
+                    return response.json();
+                })
+                .then(result => {
+                    // Sucesso!
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: 'Usuário cadastrado com sucesso!',
+                    });
+
+                    // Limpa o formulário e fecha a modal
+                    form.reset();
+                    closeModal('cadastroUsuarioModal');
+                })
+                .catch(error => {
+                    // Erro de rede ou erro lançado pelo servidor
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: `Erro ao cadastrar: ${error || 'Falha de comunicação com o servidor.'}`
+                    });
+                });
+        });
+    </script>
+
+</body>
+
+</html>
