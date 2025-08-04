@@ -1,38 +1,31 @@
 from flask import Blueprint, request,render_template,redirect, url_for, flash, session
-from services import UsuarioService as _service
+from services import UsuarioService as _usuarioService
+from services import FornecedorService as _fornecedorService
+from services import LicitacaoService as _licitacaoService
 
+login_admin = "admin"
+senha_admin = "admin"
 usuario_blueprint = Blueprint("usuario", __name__)
 
-@usuario_blueprint.route("/cadastrar", methods=["POST"])
-def cadastrar_usuario():
-    data = request.get_json()
-    email = data.get("email")
-    senha = data.get("senha")
 
-    if not email or not senha:
-        return {"erro": "Email e senha são obrigatórios."}, 400
-
-    return _service.cadastrar_usuario(email, senha)
 
 @usuario_blueprint.route("/login", methods=["POST"])
 def login_usuario():
-    email = request.form.get("email") or request.form.get("username")
+    login = request.form.get("login") or request.form.get("username")
     senha = request.form.get("senha") or request.form.get("password")
 
-    if not email or not senha:
-        flash("Email e senha são obrigatórios.", "error")
+    if not login or not senha:
+        flash("Login e senha são obrigatórios.", "error")
         return redirect(url_for("usuario.tela_login"))  
 
+    if login == login_admin and senha == senha_admin:
+        return redirect(url_for("usuario.tela_admin"))
     try:
-        dados = _service.login(email, senha)
-        session['idToken'] = dados['idToken']
-        session['refreshToken'] = dados['refreshToken']
-        session['uid'] = dados['localId']
-        session['email'] = dados['email']
-
+        id = _usuarioService.login(login, senha)
+        session['idFornecedor'] = id
         return redirect(url_for("usuario.tela_home"))  
     except ValueError as e:
-        flash("Email ou Senha incorretos", "error")
+        flash("Login ou Senha incorretos", "error")
         return redirect(url_for("usuario.tela_login"))  
 
 
@@ -42,4 +35,18 @@ def tela_login():
 
 @usuario_blueprint.route("/home", methods=["GET"])
 def tela_home():
-    return render_template("home.html")
+    try:
+        licitacoes = _licitacaoService.listar_licitacoes_fornecedor(session.get('idFornecedor'))
+        return render_template("home.html", licitacoes=licitacoes)
+    except Exception as e:
+        return f"Erro ao carregar fornecedores: {e}", 500
+
+
+@usuario_blueprint.route("/telaadmin", methods=["GET"])
+def tela_admin():
+    try:
+        fornecedores = _fornecedorService.listar_fornecedores()
+        licitacoes = _licitacaoService.listar_licitacoes()
+        return render_template("admin.html", fornecedores=fornecedores, licitacoes=licitacoes)
+    except Exception as e:
+        return f"Erro ao carregar fornecedores: {e}", 500

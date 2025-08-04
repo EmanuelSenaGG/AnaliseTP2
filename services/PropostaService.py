@@ -1,203 +1,138 @@
-from flask import current_app
-import requests
+import re
 import json
+from business import PdfBusiness
+from flask import current_app, url_for
+from google import genai
+from datetime import datetime, timedelta
+import os
+from flask import  request
+from jinja2 import Template
+from services import LicitacaoService as _licitacaoService
+from services import FornecedorService as _serviceFornecedor
 
-def gerar_pdf(data):
-    api_key = current_app.config.get("ApiDeepSeekKey")
 
-    prompt = f"""
-    Quero que você gere um HTML com layout próprio para exportação em PDF. Esse HTML deve representar uma proposta de preços formal, como usada em processos de licitação pública.
-    Atenção, vou te mandar os dados que você deve colocar no HTML, em formato JSON, e você deve gerar o HTML com base nesses dados.
+def analisar_pdf(arquivoPath):
+    text_context = PdfBusiness.extrair_texto_pdf(arquivoPath)
+    api_key = current_app.config.get("ApiGeminiKey")
+    client = genai.Client(api_key=api_key)
 
-    O template base é esse (incluindo o estilo CSS e estrutura do documento), retorne APENAS o HTML com o style no inicio e as tags, sem o <head>,<html>,<body>, sem comentários ou explicações adicionais, apenas o HTML completo:
+    try:   
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"""
+                        Analise o texto abaixo e extraia todos os itens listados nele. Não oculte nenhum item, mesmo que não tenha preço ou quantidade ou que tenha descrição parecida.
 
-    { """
-        <style>
-            div {
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                margin: 40px;
-                background-color: #fdfdfd;
-                color: #333;
-            }
+                        Para cada item identificado, retorne um **único JSON** contendo uma lista de objetos, onde cada objeto representa um item com os seguintes campos:
 
-            h1, h2, h3, p {
-                margin: 10px 0;
-            }
+                        - **descricao**: descrição do item  
+                        - **unidade**: unidade de medida (ex: kg, m, un, etc.)  
+                        - **quantidade**: quantidade do item  
+                        - **preco**: preço unitário  
+                        - **valor_total**: valor total do item (quantidade × preço)
 
-            h1 {
-                text-align: center;
-                font-size: 22pt;
-                color: #2c3e50;
-            }
+                        Não inclua nenhuma explicação ou texto adicional. A resposta deve conter **apenas o JSON** válido.
 
-            h2 {
-                font-size: 14pt;
-                margin-top: 20px;
-                color: #2c3e50;
-            }
+                        Texto para análise:
+                        {text_context}
+                        """
+        )
 
-            h3 {
-                font-size: 13pt;
-                margin-top: 15px;
-            }
+        json_result = json.loads(response.text)
+    except:
+        json_result = extrair_json_lista(response.text)
 
-            .textbox {
-                border: 2px solid #000;
-                padding: 10px;
-                margin-top: 10px;
-                background-color: #fff;
-            }
+    return json_result
 
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 25px;
-            }
 
-            table td, table th {
-                border: 1px solid #333;
-                padding: 8px;
-                font-size: 11pt;
-            }
+def analisar_pdf2(arquivoPath):
+    itens = [
+        {"descricao": "Caderno universitário capa dura 200 folhas", "unidade": "UN", "quantidade": 10, "preco": 18.50, "valor_total": 185.00},
+        {"descricao": "Caneta esferográfica azul", "unidade": "UN", "quantidade": 100, "preco": 1.20, "valor_total": 120.00},
+        {"descricao": "Papel sulfite A4 75g/m² pacote com 500 folhas", "unidade": "PC", "quantidade": 25, "preco": 22.90, "valor_total": 572.50},
+        {"descricao": "Toner compatível para impressora HP 12A", "unidade": "UN", "quantidade": 4, "preco": 68.75, "valor_total": 275.00},
+        {"descricao": "Grampeador metálico grande", "unidade": "UN", "quantidade": 8, "preco": 34.90, "valor_total": 279.20},
+        {"descricao": "Caixa organizadora plástica 40L", "unidade": "UN", "quantidade": 5, "preco": 45.00, "valor_total": 225.00},
+        {"descricao": "Mouse óptico USB", "unidade": "UN", "quantidade": 12, "preco": 29.90, "valor_total": 358.80},
+        {"descricao": "Teclado USB padrão ABNT2", "unidade": "UN", "quantidade": 10, "preco": 55.00, "valor_total": 550.00},
+        {"descricao": "Cabo HDMI 1.5m", "unidade": "UN", "quantidade": 15, "preco": 19.90, "valor_total": 298.50},
+        {"descricao": "Lixeira plástica com pedal 50L", "unidade": "UN", "quantidade": 6, "preco": 85.00, "valor_total": 510.00},
+        {"descricao": "Álcool em gel 70% 500ml", "unidade": "FR", "quantidade": 30, "preco": 6.50, "valor_total": 195.00},
+        {"descricao": "Detergente neutro 500ml", "unidade": "FR", "quantidade": 40, "preco": 3.20, "valor_total": 128.00},
+        {"descricao": "Esponja dupla face", "unidade": "UN", "quantidade": 50, "preco": 1.10, "valor_total": 55.00},
+        {"descricao": "Fita adesiva larga transparente", "unidade": "RL", "quantidade": 20, "preco": 7.90, "valor_total": 158.00},
+        {"descricao": "Bloco de anotações adesivas 76x76mm", "unidade": "UN", "quantidade": 30, "preco": 4.50, "valor_total": 135.00},
+        {"descricao": "Marcador de texto amarelo", "unidade": "UN", "quantidade": 25, "preco": 3.75, "valor_total": 93.75},
+        {"descricao": "Pasta L plástica", "unidade": "UN", "quantidade": 100, "preco": 0.85, "valor_total": 85.00},
+        {"descricao": "Envelope pardo A4", "unidade": "UN", "quantidade": 200, "preco": 0.65, "valor_total": 130.00},
+        {"descricao": "Extensão elétrica 3 metros com 3 entradas", "unidade": "UN", "quantidade": 10, "preco": 39.90, "valor_total": 399.00},
+        {"descricao": "Cadeira giratória com rodízios", "unidade": "UN", "quantidade": 3, "preco": 420.00, "valor_total": 1260.00},
+        {"descricao": "Mesa de escritório retangular 1,20m", "unidade": "UN", "quantidade": 2, "preco": 520.00, "valor_total": 1040.00},
+        {"descricao": "Estabilizador 500VA bivolt", "unidade": "UN", "quantidade": 5, "preco": 145.00, "valor_total": 725.00},
+        {"descricao": "Filtro de linha com 5 tomadas", "unidade": "UN", "quantidade": 10, "preco": 25.00, "valor_total": 250.00},
+        {"descricao": "Copo descartável 200ml", "unidade": "CX", "quantidade": 10, "preco": 12.50, "valor_total": 125.00},
+        {"descricao": "Lâmpada LED 9W bivolt", "unidade": "UN", "quantidade": 20, "preco": 9.90, "valor_total": 198.00}
+    ]
+    
+    return itens
 
-            table th {
-                background-color: #FBD4B4;
-                text-align: center;
-            }
 
-            .center {
-                text-align: center;
-            }
 
-            .right {
-                text-align: right;
-            }
+def gerar_html_proposta(dados):
+    try:
+        dados = request.get_json()
+        itens = dados.get("itens", [])
+        idLicitacao = dados.get("idLicitacao", 0)
+        idFornecedor = dados.get("idFornecedor", 0)
+        valor_total_gerado = dados.get("valor_total_geral", 0)
+        licitacao = _licitacaoService.obter_licitacao_por_id(idLicitacao)
+        fornecedor = _serviceFornecedor.obter_fornecedor_por_id(idFornecedor)
+        url_logomarca = url_for('static', filename=fornecedor.caminho_logomarca)
+        hoje = datetime.now()
+        data_emissao = hoje.strftime("%d de %B de %Y") 
+        prazo_validade = (hoje + timedelta(days=7)).strftime("%d de %B de %Y")
+        template_path = os.path.join(current_app.root_path, "static", "proposta", "proposta_template.html")
+        output_path = os.path.join(current_app.root_path, "static", "outputs",f"{fornecedor.razao_social}", f"{fornecedor.razao_social}-proposta-preenchida.html")
+        output_dir = os.path.dirname(output_path)
+        os.makedirs(output_dir, exist_ok=True)
+        
+        with open(template_path, encoding="utf-8") as f:
+            template = Template(f.read())
 
-            .section-title {
-                font-weight: bold;
-                font-size: 13pt;
-                margin-top: 30px;
-                color: #1a1a1a;
-            }
+        html_resultado = template.render(
+            empresa=licitacao,
+            fornecedor=fornecedor,
+            itens=itens,
+            valor_total_geral=valor_total_gerado,
+            data_emissao=data_emissao,
+            prazo_validade=prazo_validade,
+            url_logomarca=url_logomarca
+        )
 
-            .assinatura {
-                margin-top: 60px;
-                text-align: center;
-            }
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(html_resultado)
 
-            .assinatura span {
-                display: block;
-                margin-top: 5px;
-            }
+        url_proposta = url_for('static', filename=f"outputs/{fornecedor.razao_social}/{fornecedor.razao_social}-proposta-preenchida.html")
+        return {"url": url_proposta}
 
-            .small-text {
-                font-size: 10pt;
-                color: #555;
-            }
-        </style>
+    except Exception as e:
+        return {"erro": str(e)}, 500
+    
+    
+def extrair_json_lista(string):
+    # Expressão regular para localizar JSON do tipo lista de objetos
+    padrao = r'\[\s*\{.*?\}\s*\]'  # Captura algo como: [{...}, {...}]
+    
+    # Flags re.DOTALL para pegar multiline e re.MULTILINE se necessário
+    correspondencias = re.findall(padrao, string, re.DOTALL)
 
-        <h1>PREGÃO ELETRÔNICO Nº: PROCESSO ADMINISTRATIVO:</h1>
-
-        <h3>Órgão:</h3>
-
-        <div class="textbox">
-            <strong>Objeto da licitação:</strong>
-        </div>
-
-        <div class="textbox">
-            <p><strong>RAZÃO SOCIAL:</strong></p>
-            <p><strong>CNPJ:</strong></p>
-            <p><strong>INSCRIÇÃO ESTADUAL:</strong></p>
-            <p><strong>ENDEREÇO:</strong></p>
-            <p><strong>CIDADE:</strong></p>
-            <p><strong>TELEFONE:</strong></p>
-            <p><strong>EMAIL:</strong></p>
-            <p><strong>AGÊNCIA:</strong></p>
-            <p><strong>CONTA CORRENTE:</strong> BANCO:</p>
-        </div>
-
-        <div class="textbox">
-            <p><strong>DADOS DO PREPOSTO</strong></p>
-            <p>Nome:</p>
-            <p>RG:</p>
-            <p>CPF:</p>
-            <p>Cargo/Função: Estado Civil: Telefone/WhatsApp: E-mail:</p>
-        </div>
-
-        <div class="center section-title">PROPOSTA COMERCIAL</div>
-
-        <table>
-            <tr>
-                <td colspan="6" class="center"><strong>LOTE 01</strong></td>
-            </tr>
-            <tr>
-                <th>ITEM</th>
-                <th>DESCRIÇÃO</th>
-                <th>UND</th>
-                <th>QTD</th>
-                <th>V. UNIT.</th>
-                <th>V. TOTAL</th>
-            </tr>
-            <tr>
-                <td class="center">1</td>
-                <td>Exemplo de Produto</td>
-                <td class="center">UN</td>
-                <td class="center">10</td>
-                <td class="right">R$ 80,70</td>
-                <td class="right">R$ 807,00</td>
-            </tr>
-            <tr>
-                <td colspan="5" class="right"><strong>TOTAL</strong></td>
-                <td class="right"><strong>R$ 807.079,90</strong></td>
-            </tr>
-        </table>
-
-        <div class="section-title">CONDIÇÕES COMERCIAIS</div>
-        <h2>Prazo de validade da proposta:</h2>
-        <h2>Prazo de entrega: <span class="small-text">De acordo com o estabelecido no edital.</span></h2>
-        <h2>Local de entrega: <span class="small-text">Conforme orientação do contratante.</span></h2>
-        <h2>Condições de pagamento: <span class="small-text">Conforme o estabelecido no edital.</span></h2>
-
-        <div class="section-title">DECLARAÇÕES</div>
-        <p>Em cumprimento à Lei Federal nº 14.133/2021, DECLARAMOS:</p>
-        <ul>
-            <li>Estar em conformidade com todas as exigências legais referentes à habilitação jurídica, regularidade fiscal, trabalhista, qualificação técnica e econômico-financeira;</li>
-            <li>Atender integralmente ao objeto da contratação, conforme as especificações exigidas;</li>
-            <li>Não possuir impedimentos legais para participar de licitações ou contratar com a Administração Pública;</li>
-            <li>Ter ciência e concordância com todas as condições estabelecidas no Edital/Processo de Contratação.</li>
-        </ul>
-
-        <p class="right">Ibiassucê, 12 de julho de 2025.</p>
-
-        <div class="assinatura">
-            <hr style="width: 300px;">
-            <span>Preposto RG:</span>
-        </div>
-
- """}
-
-    O JSON com os dados é esse:
-    {json.dumps(data, ensure_ascii=False, indent=2)}
-    """
-
-    response = requests.post(
-        url="https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        },
-        data=json.dumps({
-            "model": "deepseek/deepseek-chat-v3-0324:free",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        })
-    )
-
-    if response.status_code != 200:
-        raise Exception(f"Erro ao chamar API: {response.status_code} - {response.text}")
-
-    return response.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+    for match in correspondencias:
+        try:
+            # Tenta fazer o parse do JSON
+            json_extraido = json.loads(match)
+            # Verifica se é uma lista de dicionários
+            if isinstance(json_extraido, list) and all(isinstance(obj, dict) for obj in json_extraido):
+                return json_extraido
+        except json.JSONDecodeError:
+            continue
+    
+    return None

@@ -1,0 +1,135 @@
+/* ========================================
+   RESET E CONFIGURAÇÕES GERAIS
+   ======================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+
+}
+
+body {
+    color: #e0e0e0; /* Cinza claro para texto, melhor legibilidade */
+    background-color: #121212; /* Fundo escuro sólido */
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+button,
+input,
+select,
+html,
+body,
+label,
+textarea {
+    font-family: 'Poppins', sans-serif !important;
+}
+/* ========================================
+   TÍTULO PRINCIPAL E LAYOUT
+   ======================================== */
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #ffffff;
+    font-weight: 600;
+    animation: fadeInDown 1s ease-out;
+}
+
+a, .btn-proposta {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #3498db; /* Cor de destaque sólida */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a:hover, .btn-proposta:hover {
+    transform: translateY(-2px);
+    background-color: #2980b9; /* Tom mais escuro no hover */
+}
+
+a:active, .btn-proposta:active {
+    transform: translateY(0) scale(0.99);
+}
+
+a, .btn-download {
+       padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #6e34db; /* Cor de destaque sólida */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+a:hover, .btn-download:hover {
+    transform: translateY(-2px);
+    background-color: #003e68; /* Tom mais escuro no hover */
+}
+
+a:active, .btn-download:active {
+    transform: translateY(0) scale(0.99);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    color: #e0e0e0;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+thead th {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: #2c2c2c; /* Destaque sutil no hover */
+}
+
+td {
+    font-size: 0.95rem;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

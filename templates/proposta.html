@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhamento da Licitação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/proposta.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='scripts/proposta.js') }}"></script>
+    <style>
+        /* Container para os dois cards no topo */
+        .header-panels {
+            display: flex;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+        }
+
+        .header-panels .card-detalhe,
+        .header-panels .card-acoes {
+            flex: 1;
+        }
+
+        .header-panels .card-detalhe {
+            max-width: 600px;
+        }
+
+        .header-panels .card-acoes {
+            background-color: #1e1e1e;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-panels .card-acoes h2 {
+            margin-bottom: 20px;
+            color: #f0f0f0;
+            border-bottom: 2px solid #4169e1;
+            padding-bottom: 8px;
+        }
+
+        .header-panels .card-acoes button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            color: white;
+        }
+
+        .header-panels .card-acoes .btn-pdf {
+            background-color: #4169e1;
+        }
+
+        .header-panels .card-acoes .btn-pdf:hover {
+            background-color: #3153b8;
+        }
+
+        .header-panels .card-acoes .btn-back {
+            background-color: #e53e3e;
+        }
+
+        .header-panels .card-acoes .btn-back:hover {
+            background-color: #c53030;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Detalhamento da Licitação</h1>
+
+    <div class="header-panels">
+        <div class="card-detalhe">
+            <h2>Informações Gerais</h2>
+            <div class="info-grid">
+                <p><strong>Objeto:</strong> {{ licitacao.objeto }}</p>
+                <p><strong>Pregão Eletroônico:</strong> {{ licitacao.pregao_eletronico }}</p>
+                <p><strong>Processo Administrativo:</strong> {{ licitacao.processo }}</p>
+                <p><strong>Empresa:</strong> {{ licitacao.empresa }}</p>
+                <p><strong>CNPJ:</strong> {{ licitacao.cnpj }}</p>
+                <p><strong>Responsável:</strong> {{ licitacao.responsavel }}</p>
+                <p><strong>Email:</strong> {{ licitacao.email }}</p>
+                <p><strong>Telefone:</strong> {{ licitacao.telefone }}</p>
+            </div>
+        </div>
+        <div class="card-acoes">
+            <h2>Ações</h2>
+            <button class="btn-pdf" onclick="enviarProposta(this)" data-idlicitacao="{{ licitacao.id }}"
+                data-idfornecedor="{{ fornecedor.id }}" data-apiurl="{{ url_for('proposta.gerar_html_proposta') }}">
+                Gerar PDF da Proposta
+            </button>
+
+            <button class="btn-back" onclick="window.history.back()">Voltar</button>
+        </div>
+    </div>
+
+
+
+
+    <div class="container-tabela-e-form">
+        <h2>Itens identificados</h2>
+        <table id="tabela">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Unidade</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                    <th>Valor Total</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-body"></tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+
+        <div class="add-item">
+            <h3>Adicionar novo item</h3>
+            <div class="form-grid">
+                <input type="text" id="desc" placeholder="Descrição" />
+                <input type="text" id="unid" placeholder="Unidade" />
+                <input type="number" id="qtd" placeholder="Quantidade" />
+                <input type="number" id="preco" placeholder="Preço" step="0.01" />
+                <button onclick="adicionarItem()">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const apiUrl = "{{ url_for('proposta.gerar_proposta', idLicitacao=licitacao.id) }}";
+            gerarPropostaTabela(apiUrl);
+        });
+    </script>
+
+</body>
+
+</html>
