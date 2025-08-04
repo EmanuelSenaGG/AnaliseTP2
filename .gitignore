@@ -1,0 +1,47 @@
+# Ambiente virtual
+venv/
+.env
+.venv/
+ENV/
+env/
+*.py[cod]
+__pycache__/
+*.so
+
+# Arquivos de configuração e credenciais
+*.env
+*.ini
+*.cfg
+*.log
+*.sqlite3
+instance/
+config.py
+secrets.json
+
+# Diretórios e arquivos temporários
+*.bak
+*.swp
+*.tmp
+*.DS_Store
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+
+# Arquivos do VSCode e PyCharm
+.vscode/
+.idea/
+
+# Arquivos do Flask
+*.db
+*.pid
+*.cache
+.mypy_cache/
+.pytest_cache/
+
+# Arquivos gerados por testes
+htmlcov/
+coverage.xml
+.tox/
+
+
