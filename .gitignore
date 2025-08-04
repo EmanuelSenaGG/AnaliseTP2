@@ -5,7 +5,7 @@ venv/
 ENV/
 env/
 *.py[cod]
-__pycache__/
+
 *.so
 
 # Arquivos de configuração e credenciais
