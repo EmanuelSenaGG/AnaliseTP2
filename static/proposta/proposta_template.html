@@ -4,21 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Proposta Comercial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
         /* --- Configurações Globais para um Documento Profissional --- */
         @page {
-            margin: 2cm; /* Margens padrão para documentos A4 */
+            margin: 2cm;
+            /* Margens padrão para documentos A4 */
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff; /* Fundo branco para aparência de documento */
-            color: #212529; /* Cor de texto principal (preto suave) */
-            font-size: 11pt; /* Tamanho de fonte base para boa legibilidade */
+            background-color: #fff;
+            /* Fundo branco para aparência de documento */
+            color: #212529;
+            /* Cor de texto principal (preto suave) */
+            font-size: 11pt;
+            /* Tamanho de fonte base para boa legibilidade */
             line-height: 1.5;
         }
 
@@ -27,14 +33,23 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-bottom: 2px solid #343a40; /* Linha divisória escura e sólida */
+            border-bottom: 2px solid #343a40;
+            /* Linha divisória escura e sólida */
             padding-bottom: 1.5rem;
             margin-bottom: 2.5rem;
         }
 
         .header img {
-            max-height: 70px; /* Tamanho da logo ajustado */
+            max-height: 70px;
+            /* Tamanho da logo ajustado */
             max-width: 250px;
+        }
+
+        #pdf-content {
+            max-width: 175mm;
+            /* Largura útil aproximada do A4 com margens */
+            margin: auto;
+            /* Centraliza */
         }
 
         .header-info {
@@ -54,11 +69,13 @@
             margin: 0.2rem 0;
             font-size: 0.9rem;
             font-weight: 500;
-            color: #495057; /* Cinza escuro para informações secundárias */
+            color: #495057;
+            /* Cinza escuro para informações secundárias */
         }
-        
+
         .header-info p strong {
-            color: #212529; /* Destaque para os títulos dos campos */
+            color: #212529;
+            /* Destaque para os títulos dos campos */
         }
 
 
@@ -69,7 +86,8 @@
             margin-top: 2.5rem;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 1px solid #dee2e6; /* Linha inferior sutil para separação */
+            border-bottom: 1px solid #dee2e6;
+            /* Linha inferior sutil para separação */
             color: #343a40;
         }
 
@@ -77,18 +95,22 @@
         .dados-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.75rem 1.5rem; /* Espaçamento entre linhas e colunas */
+            gap: 0.75rem 1.5rem;
+            /* Espaçamento entre linhas e colunas */
             font-size: 0.95rem;
         }
 
         .dados-grid div {
-            padding: 0.25rem 0; /* Pequeno espaçamento vertical */
+            padding: 0.25rem 0;
+            /* Pequeno espaçamento vertical */
         }
 
         .dados-grid strong {
-            color: #495057; /* Cinza para os rótulos */
+            color: #495057;
+            /* Cinza para os rótulos */
             display: inline-block;
-            min-width: 150px; /* Alinhamento visual dos dados */
+            min-width: 150px;
+            /* Alinhamento visual dos dados */
         }
 
         /* --- Tabela de Itens --- */
@@ -100,7 +122,8 @@
         }
 
         .table-itens thead th {
-            background-color: #343a40; /* Cabeçalho escuro, padrão profissional */
+            background-color: #343a40;
+            /* Cabeçalho escuro, padrão profissional */
             color: #fff;
             font-weight: 700;
             padding: 0.75rem;
@@ -113,7 +136,8 @@
         .table-itens th,
         .table-itens td {
             padding: 0.75rem;
-            border: 1px solid #dee2e6; /* Bordas finas e claras */
+            border: 1px solid #dee2e6;
+            /* Bordas finas e claras */
             text-align: left;
             vertical-align: top;
         }
@@ -125,6 +149,7 @@
         .table-itens td:nth-child(6) {
             text-align: center;
         }
+
         .table-itens td:nth-child(2) {
             text-align: left;
         }
@@ -138,7 +163,8 @@
             color: #000;
             margin-top: 1.5rem;
             padding: 1rem;
-            background-color: #f8f9fa; /* Fundo sutil para destacar o total */
+            background-color: #f8f9fa;
+            /* Fundo sutil para destacar o total */
             border-top: 3px solid #343a40;
         }
 
@@ -155,13 +181,13 @@
             margin: 0 auto 1rem auto;
             border-bottom: 1px solid #343a40;
         }
-        
+
         .assinatura-texto {
             display: block;
             color: #495057;
             font-size: 0.9rem;
         }
-        
+
         .assinatura-texto strong {
             color: #212529;
             display: block;
@@ -192,110 +218,146 @@
             padding-left: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .rodape p {
             line-height: 1.6;
         }
-
     </style>
 </head>
 
 <body>
+    <div id="pdf-content">
 
-    <div class="header">
-        <img src="{{ url_logomarca }}" alt="Logomarca">
-        <div class="header-info">
-            <h1>Proposta Comercial</h1>
-            <p><strong>Órgão:</strong> {{ empresa.empresa }}</p>
-            <p><strong>Pregão Eletrônico Nº:</strong> {{ empresa.pregao_eletronico }}</p>
-            <p><strong>Processo Administrativo:</strong> {{ empresa.processo }}</p>
+        <div class="header">
+            <img src="{{ url_logomarca }}" alt="Logomarca">
+            <div class="header-info">
+                <h1>Proposta Comercial</h1>
+                <p><strong>Órgão:</strong> {{ empresa.empresa }}</p>
+                <p><strong>Pregão Eletrônico Nº:</strong> {{ empresa.pregao_eletronico }}</p>
+                <p><strong>Processo Administrativo:</strong> {{ empresa.processo }}</p>
+            </div>
         </div>
+
+        <div class="content">
+            <h2>Dados da Empresa</h2>
+            <div class="dados-grid">
+                <div><strong>Razão Social:</strong> {{ fornecedor.razao_social }}</div>
+                <div><strong>CNPJ:</strong> {{ fornecedor.cnpj }}</div>
+                <div><strong>Inscrição Estadual:</strong> {{ fornecedor.inscricao_estadual }}</div>
+                <div><strong>Endereço:</strong> {{ fornecedor.endereco }}</div>
+                <div><strong>Cidade:</strong> {{ fornecedor.cidade }}</div>
+                <div><strong>Telefone:</strong> {{ fornecedor.telefone }}</div>
+                <div><strong>Email:</strong> {{ fornecedor.email }}</div>
+                <div><strong>Banco:</strong> {{ fornecedor.banco }}</div>
+                <div><strong>Agência:</strong> {{ fornecedor.agencia }}</div>
+                <div><strong>Conta Corrente:</strong> {{ fornecedor.conta_corrente }}</div>
+            </div>
+
+            <h2>Dados do Preposto</h2>
+            <div class="dados-grid">
+                <div><strong>Nome:</strong> {{ fornecedor.preposto_nome }}</div>
+                <div><strong>RG:</strong> {{ fornecedor.preposto_rg }}</div>
+                <div><strong>CPF:</strong> {{ fornecedor.preposto_cpf }}</div>
+                <div><strong>Cargo/Função:</strong> {{ fornecedor.preposto_cargo }}</div>
+                <div><strong>Estado Civil:</strong> {{ fornecedor.preposto_estado_civil }}</div>
+                <div><strong>Telefone/WhatsApp:</strong> {{ fornecedor.preposto_telefone }}</div>
+                <div><strong>Email:</strong> {{ fornecedor.preposto_email }}</div>
+            </div>
+
+            <h2>Itens da Proposta</h2>
+            <table class="table-itens">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Descrição</th>
+                        <th>Und.</th>
+                        <th>Qtd.</th>
+                        <th>V. Unit.</th>
+                        <th>V. Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in itens %}
+                    <tr>
+                        <td>{{ item.numero }}</td>
+                        <td>{{ item.descricao }}</td>
+                        <td>{{ item.unidade }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ item.preco }}</td>
+                        <td>R$ {{ item.valor_total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="total-geral">
+                VALOR TOTAL GERAL: R$ {{ valor_total_geral }}
+            </div>
+
+            <div class="assinatura">
+                <p>{{ data_emissao }}</p>
+                <span class="assinatura-linha"></span>
+                <span class="assinatura-texto">
+                    <strong>{{ fornecedor.preposto_nome }}</strong>
+                    Preposto | RG: {{ fornecedor.preposto_rg }}
+                </span>
+            </div>
+        </div>
+
+        <div class="rodape">
+            <h3>Condições Comerciais</h3>
+            <ul>
+                <li><strong>Validade da proposta:</strong> {{ prazo_validade }}.</li>
+                <li><strong>Prazo de entrega:</strong> Conforme estabelecido em edital.</li>
+                <li><strong>Local de entrega:</strong> Conforme indicado pela Contratante.</li>
+                <li><strong>Condições de pagamento:</strong> Conforme estabelecido em edital.</li>
+            </ul>
+
+            <h3>Declarações</h3>
+            <p>Declaramos, para os fins de direito, na qualidade de Proponente do processo licitatório em epígrafe, e em
+                pleno acordo com a Lei nº 14.133/2021, que:</p>
+            <ul>
+                <li>Cumprimos plenamente os requisitos de habilitação exigidos no edital.</li>
+                <li>Nossos preços incluem todos os custos, impostos, taxas, fretes e demais encargos incidentes.</li>
+                <li>Concordamos e nos submetemos a todas as cláusulas e condições do instrumento convocatório.</li>
+                <li>Inexistem fatos impeditivos para nossa habilitação e contratação com a Administração Pública.</li>
+            </ul>
+        </div>
+
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const content = document.getElementById("pdf-content");
 
-    <div class="content">
-        <h2>Dados da Empresa</h2>
-        <div class="dados-grid">
-            <div><strong>Razão Social:</strong> {{ fornecedor.razao_social }}</div>
-            <div><strong>CNPJ:</strong> {{ fornecedor.cnpj }}</div>
-            <div><strong>Inscrição Estadual:</strong> {{ fornecedor.inscricao_estadual }}</div>
-            <div><strong>Endereço:</strong> {{ fornecedor.endereco }}</div>
-            <div><strong>Cidade:</strong> {{ fornecedor.cidade }}</div>
-            <div><strong>Telefone:</strong> {{ fornecedor.telefone }}</div>
-            <div><strong>Email:</strong> {{ fornecedor.email }}</div>
-            <div><strong>Banco:</strong> {{ fornecedor.banco }}</div>
-            <div><strong>Agência:</strong> {{ fornecedor.agencia }}</div>
-            <div><strong>Conta Corrente:</strong> {{ fornecedor.conta_corrente }}</div>
-        </div>
+                    html2pdf().set({
+                        margin: [15, 15, 15, 15], // margem em mm: top, left, bottom, right
+                        filename: 'PROPOSTA.pdf',
+                        image: { type: 'jpeg', quality: 1.0 },
+                        html2canvas: {
+                            scale: 4,    // alta resolução
+                            useCORS: true,
+                            allowTaint: true,
+                            logging: false,
+                            scrollY: 0
+                        },
+                        jsPDF: {
+                            unit: 'mm',
+                            format: 'a4',
+                            orientation: 'portrait',
+                            precision: 20
+                        }
+                    })
+                        .from(content)
+                        .save();
+                });
+            });
+        });
 
-        <h2>Dados do Preposto</h2>
-        <div class="dados-grid">
-            <div><strong>Nome:</strong> {{ fornecedor.preposto_nome }}</div>
-            <div><strong>RG:</strong> {{ fornecedor.preposto_rg }}</div>
-            <div><strong>CPF:</strong> {{ fornecedor.preposto_cpf }}</div>
-            <div><strong>Cargo/Função:</strong> {{ fornecedor.preposto_cargo }}</div>
-            <div><strong>Estado Civil:</strong> {{ fornecedor.preposto_estado_civil }}</div>
-            <div><strong>Telefone/WhatsApp:</strong> {{ fornecedor.preposto_telefone }}</div>
-            <div><strong>Email:</strong> {{ fornecedor.preposto_email }}</div>
-        </div>
+    </script>
 
-        <h2>Itens da Proposta</h2>
-        <table class="table-itens">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Descrição</th>
-                    <th>Und.</th>
-                    <th>Qtd.</th>
-                    <th>V. Unit.</th>
-                    <th>V. Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in itens %}
-                <tr>
-                    <td>{{ item.numero }}</td>
-                    <td>{{ item.descricao }}</td>
-                    <td>{{ item.unidade }}</td>
-                    <td>{{ item.quantidade }}</td>
-                    <td>R$ {{ item.preco }}</td>
-                    <td>R$ {{ item.valor_total }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="total-geral">
-            VALOR TOTAL GERAL: R$ {{ valor_total_geral }}
-        </div>
-
-        <div class="assinatura">
-            <p>{{ data_emissao }}</p>
-            <span class="assinatura-linha"></span>
-            <span class="assinatura-texto">
-                <strong>{{ fornecedor.preposto_nome }}</strong>
-                Preposto | RG: {{ fornecedor.preposto_rg }}
-            </span>
-        </div>
-    </div>
-
-    <div class="rodape">
-        <h3>Condições Comerciais</h3>
-        <ul>
-            <li><strong>Validade da proposta:</strong> {{ prazo_validade }}.</li>
-            <li><strong>Prazo de entrega:</strong> Conforme estabelecido em edital.</li>
-            <li><strong>Local de entrega:</strong> Conforme indicado pela Contratante.</li>
-            <li><strong>Condições de pagamento:</strong> Conforme estabelecido em edital.</li>
-        </ul>
-
-        <h3>Declarações</h3>
-        <p>Declaramos, para os fins de direito, na qualidade de Proponente do processo licitatório em epígrafe, e em pleno acordo com a Lei nº 14.133/2021, que:</p>
-        <ul>
-            <li>Cumprimos plenamente os requisitos de habilitação exigidos no edital.</li>
-            <li>Nossos preços incluem todos os custos, impostos, taxas, fretes e demais encargos incidentes.</li>
-            <li>Concordamos e nos submetemos a todas as cláusulas e condições do instrumento convocatório.</li>
-            <li>Inexistem fatos impeditivos para nossa habilitação e contratação com a Administração Pública.</li>
-        </ul>
-    </div>
 
 </body>
+
 </html>

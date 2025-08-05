@@ -4,21 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Proposta Comercial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
         /* --- Configurações Globais para um Documento Profissional --- */
         @page {
-            margin: 2cm; /* Margens padrão para documentos A4 */
+            margin: 2cm;
+            /* Margens padrão para documentos A4 */
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff; /* Fundo branco para aparência de documento */
-            color: #212529; /* Cor de texto principal (preto suave) */
-            font-size: 11pt; /* Tamanho de fonte base para boa legibilidade */
+            background-color: #fff;
+            /* Fundo branco para aparência de documento */
+            color: #212529;
+            /* Cor de texto principal (preto suave) */
+            font-size: 11pt;
+            /* Tamanho de fonte base para boa legibilidade */
             line-height: 1.5;
         }
 
@@ -27,14 +33,23 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-bottom: 2px solid #343a40; /* Linha divisória escura e sólida */
+            border-bottom: 2px solid #343a40;
+            /* Linha divisória escura e sólida */
             padding-bottom: 1.5rem;
             margin-bottom: 2.5rem;
         }
 
         .header img {
-            max-height: 70px; /* Tamanho da logo ajustado */
+            max-height: 70px;
+            /* Tamanho da logo ajustado */
             max-width: 250px;
+        }
+
+        #pdf-content {
+            max-width: 175mm;
+            /* Largura útil aproximada do A4 com margens */
+            margin: auto;
+            /* Centraliza */
         }
 
         .header-info {
@@ -54,11 +69,13 @@
             margin: 0.2rem 0;
             font-size: 0.9rem;
             font-weight: 500;
-            color: #495057; /* Cinza escuro para informações secundárias */
+            color: #495057;
+            /* Cinza escuro para informações secundárias */
         }
-        
+
         .header-info p strong {
-            color: #212529; /* Destaque para os títulos dos campos */
+            color: #212529;
+            /* Destaque para os títulos dos campos */
         }
 
 
@@ -69,7 +86,8 @@
             margin-top: 2.5rem;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 1px solid #dee2e6; /* Linha inferior sutil para separação */
+            border-bottom: 1px solid #dee2e6;
+            /* Linha inferior sutil para separação */
             color: #343a40;
         }
 
@@ -77,18 +95,22 @@
         .dados-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.75rem 1.5rem; /* Espaçamento entre linhas e colunas */
+            gap: 0.75rem 1.5rem;
+            /* Espaçamento entre linhas e colunas */
             font-size: 0.95rem;
         }
 
         .dados-grid div {
-            padding: 0.25rem 0; /* Pequeno espaçamento vertical */
+            padding: 0.25rem 0;
+            /* Pequeno espaçamento vertical */
         }
 
         .dados-grid strong {
-            color: #495057; /* Cinza para os rótulos */
+            color: #495057;
+            /* Cinza para os rótulos */
             display: inline-block;
-            min-width: 150px; /* Alinhamento visual dos dados */
+            min-width: 150px;
+            /* Alinhamento visual dos dados */
         }
 
         /* --- Tabela de Itens --- */
@@ -100,7 +122,8 @@
         }
 
         .table-itens thead th {
-            background-color: #343a40; /* Cabeçalho escuro, padrão profissional */
+            background-color: #343a40;
+            /* Cabeçalho escuro, padrão profissional */
             color: #fff;
             font-weight: 700;
             padding: 0.75rem;
@@ -113,7 +136,8 @@
         .table-itens th,
         .table-itens td {
             padding: 0.75rem;
-            border: 1px solid #dee2e6; /* Bordas finas e claras */
+            border: 1px solid #dee2e6;
+            /* Bordas finas e claras */
             text-align: left;
             vertical-align: top;
         }
@@ -125,6 +149,7 @@
         .table-itens td:nth-child(6) {
             text-align: center;
         }
+
         .table-itens td:nth-child(2) {
             text-align: left;
         }
@@ -138,7 +163,8 @@
             color: #000;
             margin-top: 1.5rem;
             padding: 1rem;
-            background-color: #f8f9fa; /* Fundo sutil para destacar o total */
+            background-color: #f8f9fa;
+            /* Fundo sutil para destacar o total */
             border-top: 3px solid #343a40;
         }
 
@@ -155,13 +181,13 @@
             margin: 0 auto 1rem auto;
             border-bottom: 1px solid #343a40;
         }
-        
+
         .assinatura-texto {
             display: block;
             color: #495057;
             font-size: 0.9rem;
         }
-        
+
         .assinatura-texto strong {
             color: #212529;
             display: block;
@@ -192,1010 +218,362 @@
             padding-left: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .rodape p {
             line-height: 1.6;
         }
-
     </style>
 </head>
 
 <body>
+    <div id="pdf-content">
 
-    <div class="header">
-        <img src="/static/logomarca/MultiMarcasBR/image.jpg" alt="Logomarca">
-        <div class="header-info">
-            <h1>Proposta Comercial</h1>
-            <p><strong>Órgão:</strong> BrasilDesign LTDA</p>
-            <p><strong>Pregão Eletrônico Nº:</strong> 987654321</p>
-            <p><strong>Processo Administrativo:</strong> 12345678</p>
+        <div class="header">
+            <img src="/static/logomarca/MultiMarcasBR/image.jpg" alt="Logomarca">
+            <div class="header-info">
+                <h1>Proposta Comercial</h1>
+                <p><strong>Órgão:</strong> BrasilDesign LTDA</p>
+                <p><strong>Pregão Eletrônico Nº:</strong> 987654321</p>
+                <p><strong>Processo Administrativo:</strong> 12345678</p>
+            </div>
         </div>
+
+        <div class="content">
+            <h2>Dados da Empresa</h2>
+            <div class="dados-grid">
+                <div><strong>Razão Social:</strong> MultiMarcasBR</div>
+                <div><strong>CNPJ:</strong> 99.999.999/9999-99</div>
+                <div><strong>Inscrição Estadual:</strong> Teste</div>
+                <div><strong>Endereço:</strong> Edifico Duque de Windsor</div>
+                <div><strong>Cidade:</strong> Salvador</div>
+                <div><strong>Telefone:</strong> (99) 99999-9999</div>
+                <div><strong>Email:</strong> senamanu.ms@gmail.com</div>
+                <div><strong>Banco:</strong> Banco do Brasil</div>
+                <div><strong>Agência:</strong> 11231</div>
+                <div><strong>Conta Corrente:</strong> 327689</div>
+            </div>
+
+            <h2>Dados do Preposto</h2>
+            <div class="dados-grid">
+                <div><strong>Nome:</strong> Emanuel Sena Gomes Santos</div>
+                <div><strong>RG:</strong> 00000000000</div>
+                <div><strong>CPF:</strong> 000.000.000-00</div>
+                <div><strong>Cargo/Função:</strong> CEO</div>
+                <div><strong>Estado Civil:</strong> Solteiro</div>
+                <div><strong>Telefone/WhatsApp:</strong> (99) 99999-9999</div>
+                <div><strong>Email:</strong> senamanu.ms@gmail.com</div>
+            </div>
+
+            <h2>Itens da Proposta</h2>
+            <table class="table-itens">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Descrição</th>
+                        <th>Und.</th>
+                        <th>Qtd.</th>
+                        <th>V. Unit.</th>
+                        <th>V. Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>1</td>
+                        <td>Caderno universitário capa dura 200 folhas</td>
+                        <td>UN</td>
+                        <td>10</td>
+                        <td>R$ 18.5</td>
+                        <td>R$ 185</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>2</td>
+                        <td>Cabo HDMI 1.5m</td>
+                        <td>UN</td>
+                        <td>15</td>
+                        <td>R$ 19.9</td>
+                        <td>R$ 298.5</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>3</td>
+                        <td>Lixeira plástica com pedal 50L</td>
+                        <td>UN</td>
+                        <td>6</td>
+                        <td>R$ 85</td>
+                        <td>R$ 510</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>4</td>
+                        <td>Álcool em gel 70% 500ml</td>
+                        <td>FR</td>
+                        <td>30</td>
+                        <td>R$ 6.5</td>
+                        <td>R$ 195</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>5</td>
+                        <td>Detergente neutro 500ml</td>
+                        <td>FR</td>
+                        <td>40</td>
+                        <td>R$ 3.2</td>
+                        <td>R$ 128</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>6</td>
+                        <td>Esponja dupla face</td>
+                        <td>UN</td>
+                        <td>50</td>
+                        <td>R$ 1.1</td>
+                        <td>R$ 55.00000000000001</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>7</td>
+                        <td>Fita adesiva larga transparente</td>
+                        <td>RL</td>
+                        <td>20</td>
+                        <td>R$ 7.9</td>
+                        <td>R$ 158</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>8</td>
+                        <td>Bloco de anotações adesivas 76x76mm</td>
+                        <td>UN</td>
+                        <td>30</td>
+                        <td>R$ 4.5</td>
+                        <td>R$ 135</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>9</td>
+                        <td>Marcador de texto amarelo</td>
+                        <td>UN</td>
+                        <td>25</td>
+                        <td>R$ 3.75</td>
+                        <td>R$ 93.75</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>10</td>
+                        <td>Pasta L plástica</td>
+                        <td>UN</td>
+                        <td>100</td>
+                        <td>R$ 0.85</td>
+                        <td>R$ 85</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>11</td>
+                        <td>Envelope pardo A4</td>
+                        <td>UN</td>
+                        <td>200</td>
+                        <td>R$ 0.65</td>
+                        <td>R$ 130</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>12</td>
+                        <td>Extensão elétrica 3 metros com 3 entradas</td>
+                        <td>UN</td>
+                        <td>10</td>
+                        <td>R$ 39.9</td>
+                        <td>R$ 399</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>13</td>
+                        <td>Cadeira giratória com rodízios</td>
+                        <td>UN</td>
+                        <td>3</td>
+                        <td>R$ 420</td>
+                        <td>R$ 1260</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>14</td>
+                        <td>Mesa de escritório retangular 1,20m</td>
+                        <td>UN</td>
+                        <td>2</td>
+                        <td>R$ 520</td>
+                        <td>R$ 1040</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>15</td>
+                        <td>Estabilizador 500VA bivolt</td>
+                        <td>UN</td>
+                        <td>5</td>
+                        <td>R$ 145</td>
+                        <td>R$ 725</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>16</td>
+                        <td>Filtro de linha com 5 tomadas</td>
+                        <td>UN</td>
+                        <td>10</td>
+                        <td>R$ 25</td>
+                        <td>R$ 250</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>17</td>
+                        <td>Copo descartável 200ml</td>
+                        <td>CX</td>
+                        <td>10</td>
+                        <td>R$ 12.5</td>
+                        <td>R$ 125</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>18</td>
+                        <td>Lâmpada LED 9W bivolt</td>
+                        <td>UN</td>
+                        <td>20</td>
+                        <td>R$ 9.9</td>
+                        <td>R$ 198</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>19</td>
+                        <td>Caneta esferográfica azul</td>
+                        <td>UN</td>
+                        <td>100</td>
+                        <td>R$ 1.2</td>
+                        <td>R$ 120</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>20</td>
+                        <td>Papel sulfite A4 75g/m² pacote com 500 folhas</td>
+                        <td>PC</td>
+                        <td>25</td>
+                        <td>R$ 22.9</td>
+                        <td>R$ 572.5</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>21</td>
+                        <td>Toner compatível para impressora HP 12A</td>
+                        <td>UN</td>
+                        <td>4</td>
+                        <td>R$ 68.75</td>
+                        <td>R$ 275</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>22</td>
+                        <td>Grampeador metálico grande</td>
+                        <td>UN</td>
+                        <td>8</td>
+                        <td>R$ 34.9</td>
+                        <td>R$ 279.2</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>23</td>
+                        <td>Caixa organizadora plástica 40L</td>
+                        <td>UN</td>
+                        <td>5</td>
+                        <td>R$ 45</td>
+                        <td>R$ 225</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>24</td>
+                        <td>Mouse óptico USB</td>
+                        <td>UN</td>
+                        <td>12</td>
+                        <td>R$ 29.9</td>
+                        <td>R$ 358.79999999999995</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>25</td>
+                        <td>Teclado USB padrão ABNT2</td>
+                        <td>UN</td>
+                        <td>10</td>
+                        <td>R$ 55</td>
+                        <td>R$ 550</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            <div class="total-geral">
+                VALOR TOTAL GERAL: R$ 8350.75
+            </div>
+
+            <div class="assinatura">
+                <p>05 de August de 2025</p>
+                <span class="assinatura-linha"></span>
+                <span class="assinatura-texto">
+                    <strong>Emanuel Sena Gomes Santos</strong>
+                    Preposto | RG: 00000000000
+                </span>
+            </div>
+        </div>
+
+        <div class="rodape">
+            <h3>Condições Comerciais</h3>
+            <ul>
+                <li><strong>Validade da proposta:</strong> 12 de August de 2025.</li>
+                <li><strong>Prazo de entrega:</strong> Conforme estabelecido em edital.</li>
+                <li><strong>Local de entrega:</strong> Conforme indicado pela Contratante.</li>
+                <li><strong>Condições de pagamento:</strong> Conforme estabelecido em edital.</li>
+            </ul>
+
+            <h3>Declarações</h3>
+            <p>Declaramos, para os fins de direito, na qualidade de Proponente do processo licitatório em epígrafe, e em
+                pleno acordo com a Lei nº 14.133/2021, que:</p>
+            <ul>
+                <li>Cumprimos plenamente os requisitos de habilitação exigidos no edital.</li>
+                <li>Nossos preços incluem todos os custos, impostos, taxas, fretes e demais encargos incidentes.</li>
+                <li>Concordamos e nos submetemos a todas as cláusulas e condições do instrumento convocatório.</li>
+                <li>Inexistem fatos impeditivos para nossa habilitação e contratação com a Administração Pública.</li>
+            </ul>
+        </div>
+
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const content = document.getElementById("pdf-content");
 
-    <div class="content">
-        <h2>Dados da Empresa</h2>
-        <div class="dados-grid">
-            <div><strong>Razão Social:</strong> MultiMarcasBR</div>
-            <div><strong>CNPJ:</strong> 99.999.999/9999-99</div>
-            <div><strong>Inscrição Estadual:</strong> Teste</div>
-            <div><strong>Endereço:</strong> Edifico Duque de Windsor</div>
-            <div><strong>Cidade:</strong> Salvador</div>
-            <div><strong>Telefone:</strong> (99) 99999-9999</div>
-            <div><strong>Email:</strong> senamanu.ms@gmail.com</div>
-            <div><strong>Banco:</strong> Banco do Brasil</div>
-            <div><strong>Agência:</strong> 11231</div>
-            <div><strong>Conta Corrente:</strong> 327689</div>
-        </div>
+                    html2pdf().set({
+                        margin: [15, 15, 15, 15], // margem em mm: top, left, bottom, right
+                        filename: 'PROPOSTA.pdf',
+                        image: { type: 'jpeg', quality: 1.0 },
+                        html2canvas: {
+                            scale: 4,    // alta resolução
+                            useCORS: true,
+                            allowTaint: true,
+                            logging: false,
+                            scrollY: 0
+                        },
+                        jsPDF: {
+                            unit: 'mm',
+                            format: 'a4',
+                            orientation: 'portrait',
+                            precision: 20
+                        }
+                    })
+                        .from(content)
+                        .save();
+                });
+            });
+        });
 
-        <h2>Dados do Preposto</h2>
-        <div class="dados-grid">
-            <div><strong>Nome:</strong> Emanuel Sena Gomes Santos</div>
-            <div><strong>RG:</strong> 00000000000</div>
-            <div><strong>CPF:</strong> 000.000.000-00</div>
-            <div><strong>Cargo/Função:</strong> CEO</div>
-            <div><strong>Estado Civil:</strong> Solteiro</div>
-            <div><strong>Telefone/WhatsApp:</strong> (99) 99999-9999</div>
-            <div><strong>Email:</strong> senamanu.ms@gmail.com</div>
-        </div>
+    </script>
 
-        <h2>Itens da Proposta</h2>
-        <table class="table-itens">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Descrição</th>
-                    <th>Und.</th>
-                    <th>Qtd.</th>
-                    <th>V. Unit.</th>
-                    <th>V. Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-                <tr>
-                    <td>1</td>
-                    <td>ADESIVOS AUTOCOLANTES, VINIL, QUE TENHA BOA RESISTÊNCIA E BOA DURABILIDADE QUANDO EXPOSTO AO SOL E/OU CHUVA, COM MEDIDAS DE 20X30CM COM INSTALÇOES NO LOCAL</td>
-                    <td>UND</td>
-                    <td>500</td>
-                    <td>R$ 16.29</td>
-                    <td>R$ 8145</td>
-                </tr>
-                
-                <tr>
-                    <td>2</td>
-                    <td>ENVELOPE CARTA 11X22 TIMBRADO BRANCO OFFSET 90G UNIDADE COM FACA E IMPRESSÃO OFF-SET 4X4 COR</td>
-                    <td>UND</td>
-                    <td>3000</td>
-                    <td>R$ 1.89</td>
-                    <td>R$ 5670</td>
-                </tr>
-                
-                <tr>
-                    <td>3</td>
-                    <td>BANDEIROLAS EM PAPEL AP. 180G 4X4 COR TAMANHO 30X21CM JÁ CORTADA COM VINCO E FACA SENDO 500 UND DE CADA MODELOS COM 06 MODELOS DIFERENTES</td>
-                    <td>UNID.</td>
-                    <td>3000</td>
-                    <td>R$ 3.1</td>
-                    <td>R$ 9300</td>
-                </tr>
-                
-                <tr>
-                    <td>4</td>
-                    <td>SISVAN – MAPA DE ACOMPANHAMENTO NUTRICIONAL FRENTE E VERSO TAM. 21X30CM COM 100X1 VIA</td>
-                    <td>UNID.</td>
-                    <td>50</td>
-                    <td>R$ 10.36</td>
-                    <td>R$ 518</td>
-                </tr>
-                
-                <tr>
-                    <td>5</td>
-                    <td>PROGRAMA VIVA MULHER EXAME CITOPATOLÓGICO DO COLO DO ÚTERO FRENTE E VERSO TAM. 21X30CM COM 100X1 VIA</td>
-                    <td>UNID.</td>
-                    <td>50</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 816</td>
-                </tr>
-                
-                <tr>
-                    <td>6</td>
-                    <td>ENVELOPE GRANDE TAM. 24X34 TIMBRADO BRANCO 4X0 OFFSET 115G UNIDA DE COM FACA E IMPRESSÃO OFF-SET 4X0 COR</td>
-                    <td>UND</td>
-                    <td>5000</td>
-                    <td>R$ 2.91</td>
-                    <td>R$ 14550</td>
-                </tr>
-                
-                <tr>
-                    <td>7</td>
-                    <td>FOLDERS TAM. 21X30 CM COUCHÊ 115 BRILHO IMPRESSÃO 4X4 COM 4 DOBRAS E VERNIZ UV COM MODELOS DIVERSOS PARA AS SECRETÁRIAS</td>
-                    <td>UND</td>
-                    <td>5000</td>
-                    <td>R$ 1.92</td>
-                    <td>R$ 9600</td>
-                </tr>
-                
-                <tr>
-                    <td>8</td>
-                    <td>IMPRESSÃO DE OUTDOOR EM PAPEL, MEDINDO 3M X 9MT, COM INSTALAÇÃO NO MUNICÍPIO DE SÁTIRO DIAS -BA</td>
-                    <td>UND</td>
-                    <td>50</td>
-                    <td>R$ 511.13</td>
-                    <td>R$ 25556.5</td>
-                </tr>
-                
-                <tr>
-                    <td>9</td>
-                    <td>IMPRESSÃO DE OUTDOOR EM PAPEL, MEDINDO 3M X 10 MT, COM INSTALAÇÃO NO MUNICÍPIO DE SÁTIRO DIAS -BA</td>
-                    <td>UND</td>
-                    <td>50</td>
-                    <td>R$ 571.87</td>
-                    <td>R$ 28593.5</td>
-                </tr>
-                
-                <tr>
-                    <td>10</td>
-                    <td>IMPRESSÃO DE OUTDOOR EM ADESIVO, MEDINDO 3M X 8M, COM INSTALAÇÃO NO MUNICÍPIO DE SÁTIRO DIAS - BA</td>
-                    <td>UND</td>
-                    <td>30</td>
-                    <td>R$ 1785.69</td>
-                    <td>R$ 53570.700000000004</td>
-                </tr>
-                
-                <tr>
-                    <td>11</td>
-                    <td>IMPRESSÃO DE OUTDOOR EM ADESIVO, MEDINDO 3M X 9M, COM INSTALAÇÃO NO MUNICÍPIO DE SÁTIRO DIAS - BA</td>
-                    <td>UND</td>
-                    <td>30</td>
-                    <td>R$ 2234.72</td>
-                    <td>R$ 67041.59999999999</td>
-                </tr>
-                
-                <tr>
-                    <td>12</td>
-                    <td>CONFECÇÃO E INSTALAÇAO LONA DE 440 G, SEM EMENDA, ACABAMENTO EM ILHOES NAS EXTREMIDADES, COLORIDO, SENDO ARTES DIFERENTES PARA CADA EVENTO, A UNIDADE É COM ESTRUTURA DE METALON METRO QUADRADO, INSTALAÇÃO NO MUNICÍPIO DE SÁTIRO DIAS.</td>
-                    <td>M²</td>
-                    <td>500</td>
-                    <td>R$ 135.79</td>
-                    <td>R$ 67895</td>
-                </tr>
-                
-                <tr>
-                    <td>13</td>
-                    <td>MEIO OFÍCIO TIMBRADO POLICROMIA FORMATO 15X21 4X0 OFF- SET 90G BLOCO 100X1 VIA FOLHAS 4X0 COR</td>
-                    <td>BLS</td>
-                    <td>1000</td>
-                    <td>R$ 7.58</td>
-                    <td>R$ 7580</td>
-                </tr>
-                
-                <tr>
-                    <td>14</td>
-                    <td>PAPEL OFICIO TIMBRADO POLICROMIA FORMATO 21X30 MM 4X0 OFF-SET 90 G BLOCO COM 100X1 VIA FOLHAS</td>
-                    <td>BLS</td>
-                    <td>500</td>
-                    <td>R$ 23.72</td>
-                    <td>R$ 11860</td>
-                </tr>
-                
-                <tr>
-                    <td>15</td>
-                    <td>PASTA TIMBRADA 4X0 LAMINADA 46X31 SUPREMO 250G COM VERNIZ E BOLSA E FACA DIFERENTE E IMPRESSÃO COM 02 MODELOS 1.500 DE CADA UND. 250G</td>
-                    <td>UND</td>
-                    <td>3000</td>
-                    <td>R$ 2.68</td>
-                    <td>R$ 8040.000000000001</td>
-                </tr>
-                
-                <tr>
-                    <td>16</td>
-                    <td>TALÃO DE ARRECADAÇÃO MUNICIPAL TAM. 21X15 OFF-SET 1X0 50X2 VIAS - PAPEL AUTOCIPIATIVO 50X3 VIAS NUMERADO</td>
-                    <td>BLS</td>
-                    <td>500</td>
-                    <td>R$ 9.96</td>
-                    <td>R$ 4980</td>
-                </tr>
-                
-                <tr>
-                    <td>17</td>
-                    <td>TALÕES TAM. 15X21CM P/ ANOTAÇÕES – CAPA COUCHÊ BRILHO EM ACAMENTO COM ESPIRAL 100X1 VIA 4X0 COR EM PAPEL OFF- SET 90G IMPRESSÃO MIOLO E CAPA 4X0 COR</td>
-                    <td>BLS</td>
-                    <td>500</td>
-                    <td>R$ 11.17</td>
-                    <td>R$ 5585</td>
-                </tr>
-                
-                <tr>
-                    <td>18</td>
-                    <td>BLOCO PARA LEMBRETE TAM. 10X15 CM CORES EM 4X0 COR 100X1 VIA EM PAPEL OFF-SET 75G VIAS MODELOS SORTIDAS</td>
-                    <td>BLS</td>
-                    <td>1000</td>
-                    <td>R$ 11.26</td>
-                    <td>R$ 11260</td>
-                </tr>
-                
-                <tr>
-                    <td>19</td>
-                    <td>CARTÃO DE INSCRIÇÃO (NOME, ENDEREÇO, PROFISSÃO, LOCAL DE TRABALHO, FILIAÇÃO, IDENTIDADE E ASSINATURA). TAM. 21X30CM 4X1 COR EM PAPEL OFF-SET 180G</td>
-                    <td>UND</td>
-                    <td>1000</td>
-                    <td>R$ 0.74</td>
-                    <td>R$ 740</td>
-                </tr>
-                
-                <tr>
-                    <td>20</td>
-                    <td>DIÁRIO DE CLASSE ANOS FINAIS OFFSET 75G MIOLO – CAPA COUCHÊ 170 BRILHO – EM ESPIRAL (EDUCAÇÃO) 80PG</td>
-                    <td>UND</td>
-                    <td>300</td>
-                    <td>R$ 44.99</td>
-                    <td>R$ 13497</td>
-                </tr>
-                
-                <tr>
-                    <td>21</td>
-                    <td>DIÁRIO DE CLASSE ANOS INICIAS OFFSET 75G MIOLO – CAPA COUCHÊ BRILHO – EM ESPIRAL (EDUCAÇÃO) 70PG</td>
-                    <td>UND</td>
-                    <td>300</td>
-                    <td>R$ 44.99</td>
-                    <td>R$ 13497</td>
-                </tr>
-                
-                <tr>
-                    <td>22</td>
-                    <td>DIÁRIO DE CLASSE EDUCAÇÃO INFANTIL OFFSET MIOLO – CAPA COUCHÊ BRILHO – EM ESPIRAL (EDUCAÇÃO) 70PG</td>
-                    <td>UND</td>
-                    <td>300</td>
-                    <td>R$ 44.99</td>
-                    <td>R$ 13497</td>
-                </tr>
-                
-                <tr>
-                    <td>23</td>
-                    <td>DIÁRIO DE CLASSE EJA NÍVEL I E II OFFSET 75G – MIOLO 70P– CAPA COUCHÊ 170 – ESPIRAL (EDUCAÇÃO)</td>
-                    <td>UND</td>
-                    <td>300</td>
-                    <td>R$ 44.99</td>
-                    <td>R$ 13497</td>
-                </tr>
-                
-                <tr>
-                    <td>24</td>
-                    <td>DIÁRIO DE CLASSE EJA NIVEL III E IV OFFSET 75G – MIOLO – CAPA COUCHÊ 170-ESPIRAL (EDUCAÇÃO)</td>
-                    <td>UND</td>
-                    <td>200</td>
-                    <td>R$ 44.99</td>
-                    <td>R$ 8998</td>
-                </tr>
-                
-                <tr>
-                    <td>25</td>
-                    <td>ADESIVOS AUTOCOLANTES, VINIL, QUE TENHA RESISTÊNCIA E BOA DURABILIDADE QUANDO EXPOSTO AO SOL E/OU CHUVA, COM MEDIDAS DE 40X60CM DE COMPRIMENTO. COM INSTALÇOES NO LOCAL</td>
-                    <td>UND</td>
-                    <td>300</td>
-                    <td>R$ 56.21</td>
-                    <td>R$ 16863</td>
-                </tr>
-                
-                <tr>
-                    <td>26</td>
-                    <td>DIARIO DE CLASSE MULTISSERIADAS OFFSET 75G MIOLO – CAPA COUCHÊ 170 BRILHO – EM ESPIRAL (EDUCAÇÃO) 70PG</td>
-                    <td>UND</td>
-                    <td>200</td>
-                    <td>R$ 44.99</td>
-                    <td>R$ 8998</td>
-                </tr>
-                
-                <tr>
-                    <td>27</td>
-                    <td>ENVELOPES TIMBRADOS TAM 26X36 (EDUCAÇÃO) EM PAPEL OFF- DSET 115G 4X0 COR COM CORTE ESPECIAL TAMANHO 36X26CM FV</td>
-                    <td>UND</td>
-                    <td>4000</td>
-                    <td>R$ 1.92</td>
-                    <td>R$ 7680</td>
-                </tr>
-                
-                <tr>
-                    <td>28</td>
-                    <td>FICHA DE EMPRÉSTIMO E DEVOLUÇÃO DE LIVROS (PLANILHA). TAMANHO 21X30CM 4X0 COR PAPEL AP 90G</td>
-                    <td>UND</td>
-                    <td>1000</td>
-                    <td>R$ 1.31</td>
-                    <td>R$ 1310</td>
-                </tr>
-                
-                <tr>
-                    <td>29</td>
-                    <td>PASTA INDIVIDUAL DO ALUNO –TAM. ABERTO 66X70CM SUPREMO 250G COM VINCO (EDUCAÇÃO) – TAMANHO FECHADO 23X35CM COR DA PASTA 4X0 COM DETALHES E LETRAS NA CORES 4X0 LAMINADA 46X31 SUPREMO 250G COM VERNIZ E BOLSA E FACA DIFERENTE E IMPRESSÃO COM 02 MODELOS 2.000 DE CADA MODELOS</td>
-                    <td>UND</td>
-                    <td>4000</td>
-                    <td>R$ 2.69</td>
-                    <td>R$ 10760</td>
-                </tr>
-                
-                <tr>
-                    <td>30</td>
-                    <td>CARTÃO DE ATENDIMENTO TAM. 10X15 GRAMATURA 180G FRENTE E VERSO 4X4 COR</td>
-                    <td>UND</td>
-                    <td>6000</td>
-                    <td>R$ 0.82</td>
-                    <td>R$ 4920</td>
-                </tr>
-                
-                <tr>
-                    <td>31</td>
-                    <td>CERTIFICADOS TAM 21X30 CM A4 COUCHÊ 230, AP180 FRENTE E VERSO 4X0 COR COM MODELOS DIFERENTES E DIVERSOS MODELOS</td>
-                    <td>UND</td>
-                    <td>2000</td>
-                    <td>R$ 2.37</td>
-                    <td>R$ 4740</td>
-                </tr>
-                
-                <tr>
-                    <td>32</td>
-                    <td>ATESTADO DE COMPARECIMENTO TAM. 15X21 FRENTE PAPEL SULFITE GRAMATURA 90G, 100X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>500</td>
-                    <td>R$ 7.16</td>
-                    <td>R$ 3580</td>
-                </tr>
-                
-                <tr>
-                    <td>33</td>
-                    <td>ATESTADO MÉDICO 90G GRAMAS, TAM. 10X15CM, BLOCO COM 100 FOLHAS 100X1 VIAS</td>
-                    <td>BLS.</td>
-                    <td>1000</td>
-                    <td>R$ 5.66</td>
-                    <td>R$ 5660</td>
-                </tr>
-                
-                <tr>
-                    <td>34</td>
-                    <td>BOLETIM DE RECONHECIMENTO GEOGRÁFICO TAM. A4 FRENTE PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>300</td>
-                    <td>R$ 15.98</td>
-                    <td>R$ 4794</td>
-                </tr>
-                
-                <tr>
-                    <td>35</td>
-                    <td>CADERNO COM ESPIRAL, CAPA DURA, PAUTADO, COM 200 FOLHAS, DIMENSÕES 21, X 30 CM. DEVERÃO CONSTAR IMPRESSOS NA CAPA TRASEIRA MARCA DO FABRICANTE, DIMENSÕES E QUANTIDADE DE FOLHAS.</td>
-                    <td>unid.</td>
-                    <td>200</td>
-                    <td>R$ 44.52</td>
-                    <td>R$ 8904</td>
-                </tr>
-                
-                <tr>
-                    <td>36</td>
-                    <td>AGENDA ANUAL – TAMANHO TAMANHO 22X31CM ABERTO E FECHADO 21X16CM ACABAMENTO EM AIRO. A AGENDA DEVE CONTER NA PARTE INTERNA: PÁGINA DE DADOS PESSOAIS, CALENDÁRIOS, ANO ATUAL E ANO SEGUINTE, INFORMAR FERIADOS NACIONAIS, PÁGINA DE PLANEJAMENTO, PÁGINA DE ANOTAÇÕES, FITA COMO MARCADOR DE PÁGINAS. CAPA E CONTRA CAPA DURA, A CAPA DA AGENDA DEVE VIR PERSONALIZADA COM GRAVAÇÃO EM BAIXO RELEVO DE ALTA QUALIDADE CONFORME ARTE ENVIADA APÓS A LICITAÇÃO, A COM 300 PAGINAS COM 4X4 CORES NA IMPRESSÃO EM PAPEL OFF-SET 90G MIOLO</td>
-                    <td>UND</td>
-                    <td>200</td>
-                    <td>R$ 110.65</td>
-                    <td>R$ 22130</td>
-                </tr>
-                
-                <tr>
-                    <td>37</td>
-                    <td>CARTÃO DE PLANEJAMENTO FAMILIAR TAM. 15X21 FRETE E VERSO/ 4X4 COR EM PAPEL AP.230GCOM DOBRA</td>
-                    <td>unid.</td>
-                    <td>6000</td>
-                    <td>R$ 1.52</td>
-                    <td>R$ 9120</td>
-                </tr>
-                
-                <tr>
-                    <td>38</td>
-                    <td>CARTÃO DE VACINA ADULTO TAM. 15X10CM FRENTE E VERSO PAPEL CARTÃO GRAMATURA 230 G 4X4 COR EM PAPEL AP.230GCOM DOBRA</td>
-                    <td>unId.</td>
-                    <td>6000</td>
-                    <td>R$ 1.07</td>
-                    <td>R$ 6420</td>
-                </tr>
-                
-                <tr>
-                    <td>39</td>
-                    <td>CARTÃO DE VACINA PARA CÃES E GATOS TAM. 21X15 FRENTE E VERSO PAPEL CARTÃO, GRAMATURA 230G 4X4 COR EM PAPEL AP.230GCOM DOBRA</td>
-                    <td>unid.</td>
-                    <td>6000</td>
-                    <td>R$ 0.92</td>
-                    <td>R$ 5520</td>
-                </tr>
-                
-                <tr>
-                    <td>40</td>
-                    <td>CARTÃO HIPERDIA TAM. 15X21CM FRENTE E VERSO PAPEL CARTÃO GRAMATURA 230G 4X4 COR EM PAPEL AP.230GCOM DOBRA</td>
-                    <td>unid.</td>
-                    <td>6000</td>
-                    <td>R$ 0.77</td>
-                    <td>R$ 4620</td>
-                </tr>
-                
-                <tr>
-                    <td>41</td>
-                    <td>CONTROLE DA DOENÇA DE CHAGAS ETIQUETA DE CAPTURA FRENTE E VERSO TAM A4 TAM. 21X30CM 100X1 VIA PAPEL SULFITE GRAMATURA 90 G EM BLOCOS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>200</td>
-                    <td>R$ 22.57</td>
-                    <td>R$ 4514</td>
-                </tr>
-                
-                <tr>
-                    <td>42</td>
-                    <td>CONTROLE DE ESTOQUE DE IMUNOBIOLÓGICO TAMANHO 15X21CM FRENTE PAPEL SULFITE GRAMATURA 90 G TAM 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 19.66</td>
-                    <td>R$ 1966</td>
-                </tr>
-                
-                <tr>
-                    <td>43</td>
-                    <td>FICHA ADMISSÃO DE ENFERMAGEM TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS</td>
-                    <td>100</td>
-                    <td>R$ 11.77</td>
-                    <td>R$ 1177</td>
-                </tr>
-                
-                <tr>
-                    <td>44</td>
-                    <td>FICHA AUTORIZAÇÃO DE PROCEDIMENTOS AMBULATORIAIS COM 100X1 VIA (LAUDO DE SOLICITAÇÃO/AUTORIZAÇÃO) TAM.A4 FRETE/ PAPEL SULFITE GRAMATURA 90 G,</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 19.97</td>
-                    <td>R$ 1997</td>
-                </tr>
-                
-                <tr>
-                    <td>45</td>
-                    <td>FICHA CONTROLE DE ENFERMAGEM TAM.A4 21X30CM FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 14.76</td>
-                    <td>R$ 1476</td>
-                </tr>
-                
-                <tr>
-                    <td>46</td>
-                    <td>FICHA CONTROLE DE SINAIS VITAIS FRENTE TAM. A4 PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 14.27</td>
-                    <td>R$ 1427</td>
-                </tr>
-                
-                <tr>
-                    <td>47</td>
-                    <td>CARIMBOS DE CAIXA 20 COM 20CM</td>
-                    <td>UND</td>
-                    <td>100</td>
-                    <td>R$ 47.66</td>
-                    <td>R$ 4766</td>
-                </tr>
-                
-                <tr>
-                    <td>48</td>
-                    <td>FICHA DE ANOTAÇÃO DE ENFERMAGEM TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA TAM. 21X30CM</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 19.97</td>
-                    <td>R$ 1997</td>
-                </tr>
-                
-                <tr>
-                    <td>49</td>
-                    <td>FICHA DE CAPTURA DE TRIATOMÍNEOS FRENTE E VERSO 15X21 PAPEL AP. 180G GRAMATURA 180G 4X4 COR POLICRIMIA</td>
-                    <td>UNID.</td>
-                    <td>3000</td>
-                    <td>R$ 19.67</td>
-                    <td>R$ 59010.00000000001</td>
-                </tr>
-                
-                <tr>
-                    <td>50</td>
-                    <td>FICHA DE EVOLUÇÃO CLINICA ATENÇÃO PRIMARIA FRENTE E VERSO TAM A4, PAPEL SULFITE GRAMATURA 90G TAM 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>500</td>
-                    <td>R$ 16.97</td>
-                    <td>R$ 8485</td>
-                </tr>
-                
-                <tr>
-                    <td>51</td>
-                    <td>FICHA DE EVOLUÇÃO CLÍNICA HOSPITALAR TAM.A4 FRENTE E VERSO, PAPEL SULFITE GRAMATURA 90G, BLOCO COM 100FOLHAS100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>500</td>
-                    <td>R$ 16.97</td>
-                    <td>R$ 8485</td>
-                </tr>
-                
-                <tr>
-                    <td>52</td>
-                    <td>FICHA DE EVOLUÇÃO DE ENFERMAGEM TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHASTAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.97</td>
-                    <td>R$ 1697</td>
-                </tr>
-                
-                <tr>
-                    <td>53</td>
-                    <td>FICHA DE EVOLUÇÃO DIÁRIA DE ENFERMAGEM TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.97</td>
-                    <td>R$ 1697</td>
-                </tr>
-                
-                <tr>
-                    <td>54</td>
-                    <td>FICHA DE EVOLUÇÃO MÉDICA TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 1G 100X1 VIA TAM. 21X30CM</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.97</td>
-                    <td>R$ 1697</td>
-                </tr>
-                
-                <tr>
-                    <td>55</td>
-                    <td>FICHA DE GESTANTE TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 17.97</td>
-                    <td>R$ 1797</td>
-                </tr>
-                
-                <tr>
-                    <td>56</td>
-                    <td>FICHA DE INTERNAMENTO PARA EMISSÃO DE AIH 21X30 FRETE, PAPEL SULFITE GRAMATURA 90 G 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.97</td>
-                    <td>R$ 1697</td>
-                </tr>
-                
-                <tr>
-                    <td>57</td>
-                    <td>FICHA DE LAUDO PARA SOLICITAÇÃO DE AUTORIZAÇÃO DE INTERNAÇÃO HOSPITALAR TAM.A4 FRENTE PAPEL SULFITE GRAMATURA 90 G, TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 13.13</td>
-                    <td>R$ 1313</td>
-                </tr>
-                
-                <tr>
-                    <td>58</td>
-                    <td>CARTAZES TAM. 30X 40 MM COUCHÊ 170 BRILHO IMPRESSÃO 4X0</td>
-                    <td>UND</td>
-                    <td>2000</td>
-                    <td>R$ 2.46</td>
-                    <td>R$ 4920</td>
-                </tr>
-                
-                <tr>
-                    <td>59</td>
-                    <td>FICHA DE MEDICAÇÃO TAM.A4 FRENTE PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA TAM 21X30CM</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 10.7</td>
-                    <td>R$ 1070</td>
-                </tr>
-                
-                <tr>
-                    <td>60</td>
-                    <td>FICHA DE NOTIFICAÇÃO NEGATIVA TAM. 21X30 FRENTE E VERSO PAPEL AP 180G GRAMATURA 180G 4X4 COR</td>
-                    <td>UNID.</td>
-                    <td>3000</td>
-                    <td>R$ 1.19</td>
-                    <td>R$ 3570</td>
-                </tr>
-                
-                <tr>
-                    <td>61</td>
-                    <td>FICHA DE PASSAGEM DE PLANTÃO TAM.A4 FRENTE PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA TAM. 21X30CM</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 12.14</td>
-                    <td>R$ 1214</td>
-                </tr>
-                
-                <tr>
-                    <td>62</td>
-                    <td>FICHA DE PRESCRIÇÃO DE ENFERMAGEM TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 12.09</td>
-                    <td>R$ 1209</td>
-                </tr>
-                
-                <tr>
-                    <td>63</td>
-                    <td>FICHA DE REFERÊNCIA E CONTRA REFERÊNCIA TAMANHO A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 15.1</td>
-                    <td>R$ 1510</td>
-                </tr>
-                
-                <tr>
-                    <td>64</td>
-                    <td>FICHA DE SOLICITAÇÃO DE EXAMES LABORATORIAIS 15X21 FRENTE, PAPEL SULFITE GRAMATURA 90 G, 100X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>1500</td>
-                    <td>R$ 9.34</td>
-                    <td>R$ 14010</td>
-                </tr>
-                
-                <tr>
-                    <td>65</td>
-                    <td>FICHA DE SOLICITAÇÃO DE EXAMES OU PROCEDIMENTO 10X21 FRENTE, PAPEL AZUL, GRAMATURA 75 G, 100X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>1000</td>
-                    <td>R$ 5.77</td>
-                    <td>R$ 5770</td>
-                </tr>
-                
-                <tr>
-                    <td>66</td>
-                    <td>FICHA DE VACINAÇÃO TAM. A4 FRENTE PAPEL AP.180G FRENTE E VERSO TAM 21X30CM</td>
-                    <td>unid.</td>
-                    <td>3000</td>
-                    <td>R$ 1.07</td>
-                    <td>R$ 3210</td>
-                </tr>
-                
-                <tr>
-                    <td>67</td>
-                    <td>FICHA PARA BALANÇO HÍDRICO TAM.A4/ FRENTE PAPEL GRAMATURA 90 G, 100X1 VIA TAM 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 19.74</td>
-                    <td>R$ 1973.9999999999998</td>
-                </tr>
-                
-                <tr>
-                    <td>68</td>
-                    <td>FOLHA DE ENFERMAGEM DO RECÉM-NASCIDO TAM.A4 FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G, 100X1 VIAS TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 10.96</td>
-                    <td>R$ 1096</td>
-                </tr>
-                
-                <tr>
-                    <td>69</td>
-                    <td>CARTAZES TAM. 60 X 40 MM COUCHÊ 230 BRILHO IMPRESSÃO 4X0 COM MODELOS DIVERSOS PARA AS SECRETÁRIAS</td>
-                    <td>UND</td>
-                    <td>200</td>
-                    <td>R$ 7.08</td>
-                    <td>R$ 1416</td>
-                </tr>
-                
-                <tr>
-                    <td>70</td>
-                    <td>BLOCOS INQUÉRITO CANINO SOROLÓGICO 15X21 FRENTE E VERSO PAPEL AP 90 G 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 19.59</td>
-                    <td>R$ 1959</td>
-                </tr>
-                
-                <tr>
-                    <td>71</td>
-                    <td>MINITORIZAÇÃO DAS DOENÇAS DIARREICA AGUDAS TAM A4 FRENTE PAPEL SULFITE GRAMATURA 90 G 100X1 VIA TAM. 21X30CM</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>72</td>
-                    <td>MOVIMENTO MENSAL DE IMUNOBIOLÓGICO TAM. A4 FRENTE PAPEL SULFITE GRAMATURA 90 G BLOCOS COM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>73</td>
-                    <td>PROGRAMA DE CONTROLE DE DOENÇA DE CHAGAS TAM. 30X21 FRENTE PAPEL SULFITE GRAMATURA 90 G BLOCOS 100X1 VIA</td>
-                    <td>unid.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>74</td>
-                    <td>RECEITUÁRIO MÉDIO TAM. (15X21CM), BLOCO 100X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>1500</td>
-                    <td>R$ 5.89</td>
-                    <td>R$ 8835</td>
-                </tr>
-                
-                <tr>
-                    <td>75</td>
-                    <td>RECEITUÁRIO PEQUENO TAMANHO (10X15), BLOCO 100X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>1000</td>
-                    <td>R$ 6.32</td>
-                    <td>R$ 6320</td>
-                </tr>
-                
-                <tr>
-                    <td>76</td>
-                    <td>RELAÇÃO NOMINAL PAPANICOLAU TAM. 21X30CM FRENTE PAPEL SULFITE GRAMATURA 90 G, BLOCO 100 X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>77</td>
-                    <td>RELATÓRIO MÉDICO DE ALTA TAM.A4 FRENTE/ PAPEL SULFITE GRAMATURA 90 G, 100X1 VIA 0FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 18.49</td>
-                    <td>R$ 1848.9999999999998</td>
-                </tr>
-                
-                <tr>
-                    <td>78</td>
-                    <td>REQUISIÇÃO DE EXAME CITOPATOLOGICO TAM. 21X30CM FRENTE E VERSO PAPEL SULFITE GRAMATURA 90 G 100X1 VIA FOLHAS</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 15.76</td>
-                    <td>R$ 1576</td>
-                </tr>
-                
-                <tr>
-                    <td>79</td>
-                    <td>TALÕES DE NOTIFICAÇÃO DE RECEITA CONTROLADA, NUMERADA COM PICOTE 4X0 COR EM PAPEL SUPER BOND 75G 100X1 VIA</td>
-                    <td>TLS.</td>
-                    <td>100</td>
-                    <td>R$ 23.26</td>
-                    <td>R$ 2326</td>
-                </tr>
-                
-                <tr>
-                    <td>80</td>
-                    <td>CARTÕES DE VISITA 4X4, TAMANHO 9X5, LAMINAÇÃO, VERNIZ SENDO 200 UNDIDADES DE CADA MODELO E NOME 4X0 COR</td>
-                    <td>UND</td>
-                    <td>5000</td>
-                    <td>R$ 0.43</td>
-                    <td>R$ 2150</td>
-                </tr>
-                
-                <tr>
-                    <td>81</td>
-                    <td>FICHA DE VACINA ANIMAL TAM. 21X30CM COM 03 DOBRA 4X4 COR EM PAPEL AP.180G</td>
-                    <td>UNID.</td>
-                    <td>5000</td>
-                    <td>R$ 1.04</td>
-                    <td>R$ 5200</td>
-                </tr>
-                
-                <tr>
-                    <td>82</td>
-                    <td>FICHA DE VACINA ADULTO TAM. 21X30CM COM 03 DOBRA 4X4 COR EM PAPEL AP.180G</td>
-                    <td>UNID.</td>
-                    <td>5000</td>
-                    <td>R$ 1.04</td>
-                    <td>R$ 5200</td>
-                </tr>
-                
-                <tr>
-                    <td>83</td>
-                    <td>ETIQUETA ADESIVA DA CAPTURA TAM. 15X10 EM ADESSIVO 4X0 COR</td>
-                    <td>UNID.</td>
-                    <td>5000</td>
-                    <td>R$ 0.81</td>
-                    <td>R$ 4050.0000000000005</td>
-                </tr>
-                
-                <tr>
-                    <td>84</td>
-                    <td>MOTITORAMENTO DAS DOENÇAS DIARRÉICAS AGUDAS1X1COR EM PAPEL AP 90G TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>85</td>
-                    <td>SISTEMA DE INFORMAÇÕES DE AGRAVOS DE NOTIFICAÇÃO (FICHA DE NOTIFICAÇÃO NEGATIVA 4X1 COR EM PAPEL AP.90G TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>86</td>
-                    <td>RESUMO DIÁRIO DO SERVIÇO ANTIVERTORIAL 1X1 COR EM PAPEL AP.90G TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>87</td>
-                    <td>FICHA DE ATENDIMENTO EMERGENCIAL 4X1 COR EM PAPEL AP.90G TAM. 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>800</td>
-                    <td>R$ 9.81</td>
-                    <td>R$ 7848</td>
-                </tr>
-                
-                <tr>
-                    <td>88</td>
-                    <td>FICHA AUTORIZAÇÃO DE PROCEDIMENTOS AMBULATORIAIS (LAUDO DE SOLICITAÇÃO/AUTORIZAÇÃO) TAM.A4 FRETE/ PAPEL SULFITE GRAMATURA 90 G, BLOCO COM 100 FOLHAS100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 6.49</td>
-                    <td>R$ 649</td>
-                </tr>
-                
-                <tr>
-                    <td>89</td>
-                    <td>FICHA DE ENCAMINHAMENTO CLINICA FRENTE E VERSO TAM A 30X21CM PAPEL AP. GRAMATURA 90G TAM 21X30CM 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 21.09</td>
-                    <td>R$ 2109</td>
-                </tr>
-                
-                <tr>
-                    <td>90</td>
-                    <td>CAPA PARA ENTREGA DE EXAMES TAM. 44X31 ABERTA E FECHADA 21,5 32CM COM CORTE VINCO E OLRELHA EM PAPEL COUCHÊ 4X0 COR</td>
-                    <td>UNID.</td>
-                    <td>5000</td>
-                    <td>R$ 1.05</td>
-                    <td>R$ 5250</td>
-                </tr>
-                
-                <tr>
-                    <td>91</td>
-                    <td>CRACHÁS PARA EVENTOS EM PVC + PRESILHA JACARÉ, TAMANHO 10 X 15CM, EM 04 CORES. ARTE A SER DESENVOLVIDA PELA ASSESSORIA DE COMUNICAÇÃO.</td>
-                    <td>UND</td>
-                    <td>500</td>
-                    <td>R$ 17.91</td>
-                    <td>R$ 8955</td>
-                </tr>
-                
-                <tr>
-                    <td>92</td>
-                    <td>FICHA DE ASSISTENCIA MÉDICA FRENTE E VERSO 1X1 COR TAM. 21,0X30,0CM A P.20G 100X 1 VIA</td>
-                    <td>BLS.</td>
-                    <td>300</td>
-                    <td>R$ 0.99</td>
-                    <td>R$ 297</td>
-                </tr>
-                
-                <tr>
-                    <td>93</td>
-                    <td>FICHA CARTÃO DA FAMILIA FRENTE E VERSO EM PAPEL 180G TAM. 15X21CM</td>
-                    <td>UNID.</td>
-                    <td>5000</td>
-                    <td>R$ 2.32</td>
-                    <td>R$ 11600</td>
-                </tr>
-                
-                <tr>
-                    <td>94</td>
-                    <td>PRONTUÁRIO SUAS, COM 56 PAGINAS, TAMANHO ABERTO 44X32CM, TAMANHO FECHADO 22X32CM, IMPRESSÃO INTERNA P/B, PAPEL 75GR E CAPA, IMPRESSÃO 4X0 COR, LAMINADO EM PAPEL COUCHÊ 300GR, ACABAMENTO COM CORTE E VINCO.</td>
-                    <td>UNID.</td>
-                    <td>350</td>
-                    <td>R$ 8.27</td>
-                    <td>R$ 2894.5</td>
-                </tr>
-                
-                <tr>
-                    <td>95</td>
-                    <td>RELATÓRIO PMA2 – FRENTE/VERSO: FORMATO 21X30 PAPEL AP75GR.1X1 COR BLOCO COM. E/VERSO: FORMATO 21X30 PAPEL AP75G R1X1 COR BLOCO C 100X1 VIA</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 1632</td>
-                </tr>
-                
-                <tr>
-                    <td>96</td>
-                    <td>SISVAN-MAPA DE ACOMPANHAMENTO DIÁRIO-BLOCO C/100 FLS. FORMATO 21X30 EM PAPEL APERG.75 GR.1X0 COR. BLOCO C 100X1</td>
-                    <td>BLS.</td>
-                    <td>40</td>
-                    <td>R$ 20.06</td>
-                    <td>R$ 802.4</td>
-                </tr>
-                
-                <tr>
-                    <td>97</td>
-                    <td>SINAN - FICHA DE NOTIFICAÇÃO -BLOCO C/100 FLS. FORMATO 21X31 EM 1X1 COR EM PAPEL APERG.75GR. BLOCO C 100X1</td>
-                    <td>BLS.</td>
-                    <td>40</td>
-                    <td>R$ 16.32</td>
-                    <td>R$ 652.8</td>
-                </tr>
-                
-                <tr>
-                    <td>98</td>
-                    <td>REQUISIÇÃO DE MAMOGRAFIA, BLOCO COM, FRENTE E VERSO, PAPEL A4 21 X 30 CM BLOCO C 100X1</td>
-                    <td>BLS.</td>
-                    <td>100</td>
-                    <td>R$ 14.48</td>
-                    <td>R$ 1448</td>
-                </tr>
-                
-                <tr>
-                    <td>99</td>
-                    <td>CAPAS PARA PROCESSO IMPRESSO EM TAMANHO 50X32CM 4X0 COR EM PAPEL AP.180G COM CORTE VINCO</td>
-                    <td>UNID.</td>
-                    <td>3000</td>
-                    <td>R$ 2.09</td>
-                    <td>R$ 6270</td>
-                </tr>
-                
-                <tr>
-                    <td>100</td>
-                    <td>PANFLETOS EDUCATIVOS 4X4 CORES TAMANHO 21X30CM EM PAPEL COUCHÊ 170G COM DIVERSOS MODELOS DIFERENTE PARA ATENDER ADEMANDAS DA SECRETÁRIAS MUNICIPAL DE SÁTIRO DIAS-BA</td>
-                    <td>MILHEIRO</td>
-                    <td>1500</td>
-                    <td>R$ 0.54</td>
-                    <td>R$ 810</td>
-                </tr>
-                
-                <tr>
-                    <td>101</td>
-                    <td>BACK DROP BANNER EM BOXTRUS DE ALUMINIO Q 25. TAMANHO 4,00 DE LARGURA X3,00MTS ALTURA EM LONA UMPRESSÃO DIGITAL E COM ILHÕES OBS:(Instalada no local)</td>
-                    <td>UNID.</td>
-                    <td>10</td>
-                    <td>R$ 2849.99</td>
-                    <td>R$ 28499.899999999998</td>
-                </tr>
-                
-            </tbody>
-        </table>
-
-        <div class="total-geral">
-            VALOR TOTAL GERAL: R$ 807079.9000000001
-        </div>
-
-        <div class="assinatura">
-            <p>04 de August de 2025</p>
-            <span class="assinatura-linha"></span>
-            <span class="assinatura-texto">
-                <strong>Emanuel Sena Gomes Santos</strong>
-                Preposto | RG: 00000000000
-            </span>
-        </div>
-    </div>
-
-    <div class="rodape">
-        <h3>Condições Comerciais</h3>
-        <ul>
-            <li><strong>Validade da proposta:</strong> 11 de August de 2025.</li>
-            <li><strong>Prazo de entrega:</strong> Conforme estabelecido em edital.</li>
-            <li><strong>Local de entrega:</strong> Conforme indicado pela Contratante.</li>
-            <li><strong>Condições de pagamento:</strong> Conforme estabelecido em edital.</li>
-        </ul>
-
-        <h3>Declarações</h3>
-        <p>Declaramos, para os fins de direito, na qualidade de Proponente do processo licitatório em epígrafe, e em pleno acordo com a Lei nº 14.133/2021, que:</p>
-        <ul>
-            <li>Cumprimos plenamente os requisitos de habilitação exigidos no edital.</li>
-            <li>Nossos preços incluem todos os custos, impostos, taxas, fretes e demais encargos incidentes.</li>
-            <li>Concordamos e nos submetemos a todas as cláusulas e condições do instrumento convocatório.</li>
-            <li>Inexistem fatos impeditivos para nossa habilitação e contratação com a Administração Pública.</li>
-        </ul>
-    </div>
 
 </body>
+
 </html>
