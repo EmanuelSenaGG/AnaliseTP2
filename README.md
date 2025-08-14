@@ -6,7 +6,7 @@ Este projeto é um sistema web que utiliza a API do Gemini para diversas funcion
 
 ## Pré-requisitos
 
-Certifique-se de que o **Python** esteja instalado em sua máquina.
+Certifique-se de que o **Python** esteja instalado em sua máquina. Versão 3.12.0
 
 -----
 
