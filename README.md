@@ -1,7 +1,3 @@
-Aqui está um README para o seu projeto, seguindo as instruções que você forneceu. Ele foi formatado de forma clara para ser usado diretamente em um repositório do GitHub.
-
------
-
 # AnáliseTP2
 
 Este projeto é um sistema web que utiliza a API do Gemini para diversas funcionalidades. Siga as instruções abaixo para configurar e executar o projeto em sua máquina.
