@@ -19,7 +19,7 @@ def carregar_proposta(idLicitacao):
 @proposta_blueprint.route("/gerar_proposta/<path:idLicitacao>", methods=["GET"])
 def gerar_proposta(idLicitacao):
     caminho_arquivo = _licitacaoService.obter_path_arquivo_licitacao_por_id(idLicitacao)
-    resultado = _serviceProposta.analisar_pdf2(caminho_arquivo)
+    resultado = _serviceProposta.analisar_pdf(caminho_arquivo)
     json = jsonify(resultado)
     return json
 

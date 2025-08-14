@@ -12,7 +12,7 @@ def create_app():
     db = firestore.client()
     app = Flask(__name__)
     app.secret_key = "19042002" 
-    app.config["ApiGeminiKey"] = "AIzaSyCp7D_zlt6VvWX3gnw8d2FkaoScA1m-bD0"
+    app.config["ApiGeminiKey"] = "SUA KEY AQUI"
     app.config["FIREBASE_DB"] = db
     app.config["FIREBASE_AUTH"] = auth
     app.json.dumps = lambda obj, **kwargs: json.dumps(obj, ensure_ascii=False, **kwargs)
